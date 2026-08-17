@@ -1,0 +1,110 @@
+import { memo } from 'react';
+import { shallowEqual, useSelector } from 'react-redux';
+
+import type { IApplicationState, TUserStatus, IOmnichannelSource, IVisitor, ISubscription } from '../../definitions';
+import { STATUS_I18N_KEYS } from '../../definitions';
+import I18n from '../../i18n';
+import RoomHeader from './RoomHeader';
+import { useResponsiveLayout } from '../../lib/hooks/useResponsiveLayout/useResponsiveLayout';
+
+interface IRoomHeaderContainerProps {
+	title?: string;
+	subtitle?: string;
+	type: string;
+	prid?: string;
+	tmid?: string;
+	teamMain?: boolean;
+	roomUserId?: string | null;
+	onPress: () => void;
+	parentTitle?: string;
+	isGroupChat?: boolean;
+	testID?: string;
+	sourceType?: IOmnichannelSource;
+	visitor?: IVisitor;
+	disabled?: boolean;
+	abacAttributes?: ISubscription['abacAttributes'];
+}
+
+const RoomHeaderContainer = memo(
+	({
+		isGroupChat,
+		onPress,
+		parentTitle,
+		prid,
+		roomUserId,
+		subtitle: subtitleProp,
+		teamMain,
+		testID,
+		title,
+		tmid,
+		type,
+		sourceType,
+		visitor,
+		disabled,
+		abacAttributes
+	}: IRoomHeaderContainerProps) => {
+		let subtitle: string | undefined;
+		let statusVisitor: TUserStatus | undefined;
+		let statusText: string | undefined;
+		let statusExpiresAt: string | undefined;
+		const { width, height } = useResponsiveLayout();
+
+		const connecting = useSelector((state: IApplicationState) => state.meteor.connecting || state.server.loading);
+		const usersTyping = useSelector((state: IApplicationState) => state.usersTyping, shallowEqual);
+		const connected = useSelector((state: IApplicationState) => state.meteor.connected);
+		const activeUser = useSelector(
+			(state: IApplicationState) => (roomUserId ? state.activeUsers?.[roomUserId] : undefined),
+			shallowEqual
+		);
+
+		if (connecting) {
+			subtitle = I18n.t('Connecting');
+		} else if (!connected) {
+			subtitle = I18n.t('Waiting_for_network');
+		} else {
+			subtitle = subtitleProp;
+		}
+
+		if (connected) {
+			if ((type === 'd' || (tmid && roomUserId)) && activeUser) {
+				const {
+					statusText: statusTextActiveUser,
+					statusExpiresAt: statusExpiresAtActiveUser,
+					status: statusActiveUser
+				} = activeUser;
+				const presenceKey = statusActiveUser ? STATUS_I18N_KEYS[statusActiveUser] : undefined;
+				const presenceLabel = presenceKey ? I18n.t(presenceKey) : undefined;
+				statusText = statusTextActiveUser || presenceLabel;
+				statusExpiresAt = statusExpiresAtActiveUser;
+			} else if (type === 'l' && visitor?.status) {
+				({ status: statusVisitor } = visitor);
+			}
+		}
+
+		return (
+			<RoomHeader
+				roomUserId={roomUserId}
+				prid={prid}
+				tmid={tmid}
+				title={title}
+				subtitle={type === 'd' ? statusText : subtitle}
+				statusExpiresAt={type === 'd' ? statusExpiresAt : undefined}
+				type={type}
+				teamMain={teamMain}
+				status={statusVisitor}
+				width={width}
+				height={height}
+				usersTyping={usersTyping}
+				parentTitle={parentTitle}
+				isGroupChat={isGroupChat}
+				testID={testID}
+				onPress={onPress}
+				sourceType={sourceType}
+				disabled={disabled}
+				abacAttributes={abacAttributes}
+			/>
+		);
+	}
+);
+
+export default RoomHeaderContainer;

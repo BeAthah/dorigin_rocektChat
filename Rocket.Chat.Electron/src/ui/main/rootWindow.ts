@@ -1,0 +1,663 @@
+import path from 'path';
+
+import type {
+  ContextMenuParams,
+  Rectangle,
+  NativeImage,
+  WebPreferences,
+} from 'electron';
+import {
+  app,
+  BrowserWindow,
+  Menu,
+  nativeImage,
+  nativeTheme,
+  screen,
+} from 'electron';
+import i18next from 'i18next';
+import { createStructuredSelector } from 'reselect';
+
+import {
+  APP_MACHINE_THEME_SET,
+  APP_MAIN_WINDOW_TITLE_SET,
+} from '../../app/actions';
+import { setupRootWindowReload } from '../../app/main/dev';
+import { getPersistedValues } from '../../app/main/persistence';
+import { select, watch, listen, dispatchLocal, dispatch } from '../../store';
+import type { RootState } from '../../store/rootReducer';
+import { ROOT_WINDOW_STATE_CHANGED, WEBVIEW_FOCUS_REQUESTED } from '../actions';
+import type { WindowState } from '../common';
+import { selectGlobalBadge, selectGlobalBadgeCount } from '../selectors';
+import { debounce } from './debounce';
+import { getTrayIconPath } from './icons';
+
+const webPreferences: WebPreferences = {
+  nodeIntegration: true,
+  nodeIntegrationInSubFrames: true,
+  contextIsolation: false,
+  webviewTag: true,
+};
+
+const selectRootWindowState = ({ rootWindowState }: RootState): WindowState =>
+  rootWindowState ?? {
+    bounds: {
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+    },
+    focused: false,
+    fullscreen: false,
+    maximized: false,
+    minimized: false,
+    normal: false,
+    visible: false,
+  };
+
+let _rootWindow: BrowserWindow;
+let tempWindow: BrowserWindow;
+
+export const getRootWindow = (): Promise<BrowserWindow> =>
+  new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (!_rootWindow) {
+        reject(new Error('Root window not initialized'));
+        return;
+      }
+      if (_rootWindow.isDestroyed()) {
+        reject(new Error('Root window has been destroyed'));
+        return;
+      }
+      resolve(_rootWindow);
+    }, 300);
+  });
+
+const platformTitleBarStyle =
+  process.platform === 'darwin' ? 'hidden' : 'default';
+
+const isMac = process.platform === 'darwin';
+const getEnableVibrancy = (): boolean => {
+  if (!isMac) {
+    return false;
+  }
+  try {
+    const persistedValues: { isTransparentWindowEnabled?: boolean } =
+      getPersistedValues();
+    return persistedValues?.isTransparentWindowEnabled === true;
+  } catch (error) {
+    return false;
+  }
+};
+
+const getInitialBackgroundColor = (enableVibrancy: boolean): string => {
+  if (enableVibrancy) return '#00000000';
+  return nativeTheme.shouldUseDarkColors ? '#2f343d' : '#ffffff';
+};
+
+export const createRootWindow = (): void => {
+  const enableVibrancy = getEnableVibrancy();
+  _rootWindow = new BrowserWindow({
+    width: 1000,
+    height: 600,
+    minWidth: 400,
+    minHeight: 400,
+    titleBarStyle: platformTitleBarStyle,
+    backgroundColor: getInitialBackgroundColor(enableVibrancy),
+    show: false,
+    webPreferences,
+    ...(enableVibrancy
+      ? {
+          transparent: true,
+          vibrancy: 'sidebar',
+          visualEffectState: 'active',
+        }
+      : {}),
+  });
+
+  // Block navigation to smb:// protocol
+  _rootWindow.webContents.on('will-navigate', (event, url) => {
+    if (typeof url === 'string' && url.toLowerCase().startsWith('smb://')) {
+      event.preventDefault();
+    }
+  });
+  _rootWindow.webContents.setWindowOpenHandler(({ url }: { url: string }) => {
+    if (url.toLowerCase().startsWith('smb://')) {
+      return { action: 'deny' };
+    }
+    return { action: 'allow' };
+  });
+
+  _rootWindow.addListener('close', (event: any) => {
+    event.preventDefault();
+  });
+
+  tempWindow.destroy();
+};
+
+export const normalizeNumber = (value: number | undefined): number =>
+  value && isFinite(1 / value) ? value : 0;
+
+// A window counts as on-screen if it overlaps any display, rather than being fully contained
+// by one. This preserves the saved bounds for windows parked at a screen edge or spanning two
+// monitors, which were previously discarded and re-centered on the primary display (#2714).
+export const isInsideSomeScreen = ({
+  x,
+  y,
+  width,
+  height,
+}: Rectangle): boolean =>
+  screen
+    .getAllDisplays()
+    .some(
+      ({ bounds }) =>
+        x < bounds.x + bounds.width &&
+        x + width > bounds.x &&
+        y < bounds.y + bounds.height &&
+        y + height > bounds.y
+    );
+
+export const applyRootWindowState = (browserWindow: BrowserWindow): void => {
+  const rootWindowState = select(selectRootWindowState);
+  const isTrayIconEnabled = select(
+    ({ isTrayIconEnabled }) => isTrayIconEnabled
+  );
+
+  let { x = null, y = null } = rootWindowState.bounds;
+  let { width, height } = rootWindowState.bounds;
+  if (
+    x === null ||
+    y === null ||
+    !isInsideSomeScreen({ x, y, width, height })
+  ) {
+    const primaryDisplay = screen.getPrimaryDisplay();
+    const {
+      bounds: { width: primaryDisplayWidth, height: primaryDisplayHeight },
+    } = primaryDisplay;
+    x = Math.round((primaryDisplayWidth - width) / 2);
+    y = Math.round((primaryDisplayHeight - height) / 2);
+    width = normalizeNumber(primaryDisplay.workAreaSize.width * 0.9);
+    height = normalizeNumber(primaryDisplay.workAreaSize.height * 0.9);
+  }
+  if (browserWindow.isVisible()) {
+    return;
+  }
+
+  x = normalizeNumber(x);
+  y = normalizeNumber(y);
+  width = normalizeNumber(width);
+  height = normalizeNumber(height);
+
+  if (
+    browserWindow &&
+    Number.isInteger(width) &&
+    Number.isInteger(height) &&
+    Number.isInteger(x) &&
+    Number.isInteger(y)
+  ) {
+    browserWindow.setBounds({
+      width,
+      height,
+      x,
+      y,
+    });
+  }
+
+  if (rootWindowState.maximized) {
+    browserWindow.maximize();
+  }
+
+  if (rootWindowState.minimized) {
+    browserWindow.minimize();
+  }
+
+  if (rootWindowState.fullscreen) {
+    browserWindow.setFullScreen(true);
+  }
+
+  if (rootWindowState.visible || !isTrayIconEnabled) {
+    browserWindow.show();
+  }
+
+  if (rootWindowState.focused) {
+    browserWindow.focus();
+  }
+};
+
+const fetchRootWindowState = async (): Promise<
+  ReturnType<typeof selectRootWindowState>
+> => {
+  const browserWindow = await getRootWindow();
+  return {
+    focused: browserWindow?.isFocused(),
+    visible: browserWindow?.isVisible(),
+    maximized: browserWindow?.isMaximized(),
+    minimized: browserWindow?.isMinimized(),
+    fullscreen: browserWindow?.isFullScreen(),
+    normal: browserWindow?.isNormal(),
+    bounds: browserWindow?.getNormalBounds(),
+  };
+};
+
+export const setupRootWindow = (): void => {
+  const safeWindowOperation = async <T>(
+    operation: (window: BrowserWindow) => Promise<T> | T,
+    operationName: string
+  ): Promise<T | void> => {
+    try {
+      const window = await getRootWindow();
+      if (window.isDestroyed()) {
+        return;
+      }
+      return await operation(window);
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(`${operationName} skipped:`, error);
+      }
+    }
+  };
+
+  const unsubscribers = [
+    watch(selectGlobalBadgeCount, async (globalBadgeCount) => {
+      await safeWindowOperation(async (browserWindow) => {
+        if (browserWindow.isFocused() || globalBadgeCount === 0) {
+          return;
+        }
+
+        const { isShowWindowOnUnreadChangedEnabled, isFlashFrameEnabled } =
+          select(
+            ({ isShowWindowOnUnreadChangedEnabled, isFlashFrameEnabled }) => ({
+              isShowWindowOnUnreadChangedEnabled,
+              isFlashFrameEnabled,
+            })
+          );
+
+        if (isShowWindowOnUnreadChangedEnabled && !browserWindow.isVisible()) {
+          const isMinimized = browserWindow.isMinimized();
+          const isMaximized = browserWindow.isMaximized();
+
+          browserWindow.showInactive();
+
+          if (isMinimized) {
+            browserWindow.minimize();
+          }
+
+          if (isMaximized) {
+            browserWindow.maximize();
+          }
+          return;
+        }
+
+        if (isFlashFrameEnabled && process.platform !== 'darwin') {
+          browserWindow.flashFrame(true);
+        }
+      }, 'Badge count update');
+    }),
+    watch(
+      ({ currentView, servers }) => {
+        const currentServer =
+          typeof currentView === 'object'
+            ? servers.find(({ url }) => url === currentView.url)
+            : null;
+        return currentServer?.pageTitle || currentServer?.title || app.name;
+      },
+      async (windowTitle) => {
+        await safeWindowOperation((browserWindow) => {
+          browserWindow.setTitle(windowTitle);
+          dispatch({
+            type: APP_MAIN_WINDOW_TITLE_SET,
+            payload: windowTitle,
+          });
+        }, 'Window title update');
+      }
+    ),
+    listen(WEBVIEW_FOCUS_REQUESTED, async () => {
+      await safeWindowOperation((rootWindow) => {
+        rootWindow.focus();
+        rootWindow.show();
+      }, 'Webview focus request');
+    }),
+  ];
+
+  const fetchAndDispatchWindowState = debounce(async (): Promise<void> => {
+    try {
+      const state = await fetchRootWindowState();
+      dispatchLocal({
+        type: ROOT_WINDOW_STATE_CHANGED,
+        payload: state,
+      });
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Failed to fetch window state:', error);
+      }
+    }
+  }, 1000);
+
+  getRootWindow().then((rootWindow) => {
+    rootWindow.addListener('show', fetchAndDispatchWindowState);
+    rootWindow.addListener('hide', fetchAndDispatchWindowState);
+    rootWindow.addListener('focus', fetchAndDispatchWindowState);
+    rootWindow.addListener('blur', fetchAndDispatchWindowState);
+    rootWindow.addListener('maximize', fetchAndDispatchWindowState);
+    rootWindow.addListener('unmaximize', fetchAndDispatchWindowState);
+    rootWindow.addListener('minimize', fetchAndDispatchWindowState);
+    rootWindow.addListener('restore', fetchAndDispatchWindowState);
+    rootWindow.addListener('resize', fetchAndDispatchWindowState);
+    rootWindow.addListener('move', fetchAndDispatchWindowState);
+
+    fetchAndDispatchWindowState();
+
+    rootWindow.addListener('focus', async () => {
+      rootWindow.flashFrame(false);
+    });
+
+    rootWindow.addListener('close', async (event) => {
+      try {
+        if (rootWindow.isDestroyed()) {
+          return;
+        }
+
+        if (rootWindow.isFullScreen()) {
+          await new Promise<void>((resolve) =>
+            rootWindow.once('leave-full-screen', () => resolve())
+          );
+          rootWindow.setFullScreen(false);
+        }
+
+        if (process.platform !== 'linux' && !rootWindow.isDestroyed()) {
+          rootWindow.blur();
+        }
+
+        let isTrayIconEnabled: boolean;
+        let isMinimizeOnCloseEnabled: boolean;
+
+        try {
+          isTrayIconEnabled = select(
+            ({ isTrayIconEnabled }) => isTrayIconEnabled ?? true
+          );
+          isMinimizeOnCloseEnabled = select(
+            ({ isMinimizeOnCloseEnabled }) => isMinimizeOnCloseEnabled ?? true
+          );
+        } catch (error) {
+          console.warn(
+            'Failed to access application state during close:',
+            error
+          );
+          isTrayIconEnabled = true;
+          isMinimizeOnCloseEnabled = true;
+        }
+
+        if (process.platform === 'darwin' || isTrayIconEnabled) {
+          if (!rootWindow.isDestroyed()) {
+            rootWindow.hide();
+          }
+          return;
+        }
+
+        if (process.platform === 'win32' && isMinimizeOnCloseEnabled) {
+          if (!rootWindow.isDestroyed()) {
+            rootWindow.minimize();
+          }
+          return;
+        }
+
+        // Prevent race condition: window destruction during app.quit()
+        event.preventDefault();
+        app.quit();
+      } catch (error) {
+        console.error('Error in close event handler:', error);
+        event.preventDefault();
+        app.quit();
+      }
+    });
+
+    unsubscribers.push(() => {
+      try {
+        if (rootWindow && !rootWindow.isDestroyed()) {
+          rootWindow.removeAllListeners();
+          setImmediate(() => {
+            if (rootWindow && !rootWindow.isDestroyed()) {
+              rootWindow.close();
+            }
+          });
+        }
+      } catch (error) {
+        console.error('Error during root window cleanup:', error);
+      }
+    });
+  });
+
+  if (process.platform === 'linux' || process.platform === 'win32') {
+    const selectRootWindowIcon = createStructuredSelector({
+      globalBadge: selectGlobalBadge,
+      rootWindowIcon: ({ rootWindowIcon }: RootState) => rootWindowIcon,
+    });
+
+    unsubscribers.push(
+      watch(selectRootWindowIcon, async ({ globalBadge, rootWindowIcon }) => {
+        await safeWindowOperation(async (browserWindow) => {
+          if (!rootWindowIcon) {
+            browserWindow.setIcon(
+              nativeImage.createFromPath(
+                getTrayIconPath({
+                  platform: process.platform,
+                  badge: globalBadge,
+                })
+              )
+            );
+            return;
+          }
+
+          const icon = nativeImage.createEmpty();
+          const { scaleFactor } = screen.getPrimaryDisplay();
+
+          if (process.platform === 'linux') {
+            rootWindowIcon.icon.forEach((representation) => {
+              icon.addRepresentation({
+                ...representation,
+                scaleFactor,
+              });
+            });
+          }
+
+          if (process.platform === 'win32') {
+            for (const representation of rootWindowIcon.icon) {
+              icon.addRepresentation({
+                ...representation,
+                scaleFactor: Math.max((representation.width ?? 0) / 32, 1),
+              });
+            }
+          }
+
+          browserWindow.setIcon(icon);
+
+          if (process.platform === 'win32') {
+            let overlayIcon: NativeImage | null = null;
+            const overlayDescription: string =
+              (typeof globalBadge === 'number' &&
+                i18next.t('unreadMention', {
+                  appName: app.name,
+                  count: globalBadge,
+                })) ||
+              (globalBadge === '•' &&
+                i18next.t('unreadMessage', { appName: app.name })) ||
+              i18next.t('noUnreadMessage', { appName: app.name });
+            if (rootWindowIcon.overlay) {
+              overlayIcon = nativeImage.createEmpty();
+
+              for (const representation of rootWindowIcon.overlay) {
+                overlayIcon.addRepresentation({
+                  ...representation,
+                  scaleFactor: 1,
+                });
+              }
+            }
+
+            const isTrayIconEnabled = select(
+              ({ isTrayIconEnabled }) => isTrayIconEnabled ?? true
+            );
+
+            if (!isTrayIconEnabled) {
+              const t = i18next.t.bind(i18next);
+              const translate = `taskbar.${overlayDescription}`;
+              const taskbarTitle =
+                globalBadge !== undefined
+                  ? `(${globalBadge}) ${t(translate)}`
+                  : t(translate);
+
+              browserWindow.setTitle(taskbarTitle);
+            }
+            browserWindow.setOverlayIcon(overlayIcon, overlayDescription);
+          }
+        }, 'Window icon update');
+      }),
+      watch(
+        ({ isMenuBarEnabled }) => isMenuBarEnabled,
+        async (isMenuBarEnabled) => {
+          await safeWindowOperation((browserWindow) => {
+            browserWindow.autoHideMenuBar = !isMenuBarEnabled;
+            browserWindow.setMenuBarVisibility(isMenuBarEnabled);
+          }, 'Menu bar visibility update');
+        }
+      )
+    );
+  }
+
+  app.addListener('before-quit', () => {
+    unsubscribers.forEach((unsubscriber) => {
+      try {
+        unsubscriber();
+      } catch (error) {
+        console.warn('Unsubscriber error during quit:', error);
+      }
+    });
+  });
+};
+
+const createRootWindowContextMenu = ({
+  editFlags: {
+    canUndo = false,
+    canRedo = false,
+    canCut = false,
+    canCopy = false,
+    canPaste = false,
+    canSelectAll = false,
+  },
+}: ContextMenuParams): Menu => {
+  const t = i18next.t.bind(i18next);
+  return Menu.buildFromTemplate([
+    {
+      label: t('contextMenu.undo'),
+      role: 'undo',
+      accelerator: 'CommandOrControl+Z',
+      enabled: canUndo,
+    },
+    {
+      label: t('contextMenu.redo'),
+      role: 'redo',
+      accelerator:
+        process.platform === 'win32' ? 'Control+Y' : 'CommandOrControl+Shift+Z',
+      enabled: canRedo,
+    },
+    { type: 'separator' },
+    {
+      label: t('contextMenu.cut'),
+      role: 'cut',
+      accelerator: 'CommandOrControl+X',
+      enabled: canCut,
+    },
+    {
+      label: t('contextMenu.copy'),
+      role: 'copy',
+      accelerator: 'CommandOrControl+C',
+      enabled: canCopy,
+    },
+    {
+      label: t('contextMenu.paste'),
+      role: 'paste',
+      accelerator: 'CommandOrControl+V',
+      enabled: canPaste,
+    },
+    {
+      label: t('contextMenu.selectAll'),
+      role: 'selectAll',
+      accelerator: 'CommandOrControl+A',
+      enabled: canSelectAll,
+    },
+  ]);
+};
+
+export const showRootWindow = async (): Promise<void> => {
+  const browserWindow = await getRootWindow();
+
+  browserWindow.webContents.on('context-menu', (event, params) => {
+    event.preventDefault();
+    const menu = createRootWindowContextMenu(params);
+    menu.popup({ window: browserWindow });
+  });
+
+  browserWindow.loadFile(path.join(app.getAppPath(), 'app/index.html'));
+
+  if (process.env.NODE_ENV === 'development') {
+    setupRootWindowReload(browserWindow.webContents);
+  }
+
+  return new Promise((resolve) => {
+    browserWindow.once('ready-to-show', () => {
+      applyRootWindowState(browserWindow);
+
+      const isTrayIconEnabled = select(
+        ({ isTrayIconEnabled }) => isTrayIconEnabled
+      );
+
+      if (app.commandLine.hasSwitch('start-hidden') && isTrayIconEnabled) {
+        console.debug('Start application in background');
+        browserWindow.hide();
+      }
+
+      setupRootWindow();
+
+      resolve();
+    });
+  });
+};
+
+export const watchMachineTheme = (): void => {
+  dispatchMachineTheme();
+  nativeTheme.on('updated', () => {
+    dispatchMachineTheme();
+  });
+};
+
+const dispatchMachineTheme = (): void => {
+  const isDarkMode = nativeTheme.shouldUseDarkColors;
+  dispatch({
+    type: APP_MACHINE_THEME_SET,
+    payload: isDarkMode ? 'dark' : 'light',
+  });
+};
+
+export const exportLocalStorage = async (): Promise<Record<string, string>> => {
+  try {
+    tempWindow = new BrowserWindow({
+      show: false,
+      webPreferences,
+    });
+
+    tempWindow.loadFile(path.join(app.getAppPath(), 'app/index.html'));
+
+    await new Promise<void>((resolve) => {
+      tempWindow.once('ready-to-show', () => {
+        resolve();
+      });
+    });
+
+    return tempWindow.webContents.executeJavaScript(`(() => {
+      const data = ({...localStorage})
+      localStorage.clear();
+      return data;
+    })()`);
+  } catch (error) {
+    console.error(error);
+    return {};
+  }
+};

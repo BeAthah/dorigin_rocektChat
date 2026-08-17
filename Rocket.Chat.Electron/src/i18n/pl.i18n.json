@@ -1,0 +1,424 @@
+{
+  "contextMenu": {
+    "cut": "&Wytnij",
+    "copy": "&Kopiuj",
+    "paste": "Wk&lej",
+    "selectAll": "Z&aznacz wszystko",
+    "undo": "&Cofnij",
+    "redo": "&Ponów",
+    "spellingLanguages": "Sprawdzanie pisowni",
+    "moreSpellingSuggestions": "Więcej propozycji pisowni",
+    "noSpellingSuggestions": "Brak sugestii",
+    "copyLinkAddress": "Kopiuj adres odnośnika",
+    "copyLinkText": "Kopiuj tekst odnośnika",
+    "openLink": "Otwórz odnośnik",
+    "saveImageAs": "Zapisz obraz jako..."
+  },
+  "dialog": {
+    "about": {
+      "title": "O {{- appName}}",
+      "version": "Wersja: <1>{{-version}}</1>",
+      "checkUpdates": "Sprawdź aktualizacje",
+      "checkUpdatesOnStart": "Sprawdzanie aktualizacji przy uruchomieniu",
+      "noUpdatesAvailable": "Brak dostępnych aktualizacji.",
+      "copyright": "Prawa autorskie {{copyright}}",
+      "errorWhenLookingForUpdates": "Wystąpił błąd podczas wyszukiwania aktualizacji",
+      "updateChannel": {
+        "label": "Kanał aktualizacji",
+        "latest": "Stabilny",
+        "beta": "Beta",
+        "alpha": "Alfa (Eksperymentalny)"
+      }
+    },
+    "addServer": {
+      "title": "Dodaj Serwer",
+      "message": "Chcesz dodać \"{{- host}}\" do swojej listy serwerów?",
+      "add": "Dodaj",
+      "cancel": "Anuluj"
+    },
+    "addServerError": {
+      "title": "Niepoprawny host",
+      "message": "Serwer \"{{- host}}\" nie mógł być zweryfikowany, więc nie został dodany."
+    },
+    "certificateError": {
+      "title": "Błąd certyfikatu",
+      "message": "Chcesz zaufać certyfikatowi od \"{{- issuerName}}\"?",
+      "yes": "Tak",
+      "no": "Nie"
+    },
+    "resetAppData": {
+      "title": "Reset danych aplikacji",
+      "message": "Spowoduje to wylogowanie ze wszystkich zespołów i przywrócenie pierwotnych ustawień aplikacji. Tego nie da się cofnąć.",
+      "yes": "Tak",
+      "cancel": "Anuluj"
+    },
+    "screenshare": {
+      "title": "Udostępnij swój ekran",
+      "announcement": "Wybierz ekran do udostępnienia"
+    },
+    "update": {
+      "title": "Dostępna aktualizacja",
+      "announcement": "Nowa aktualizacja jest dostępna",
+      "message": "Nowa wersja aplikacji Rocket.Chat Desktop jest dostępna!",
+      "currentVersion": "Bieżąca wersja:",
+      "newVersion": "Nowa wersja:",
+      "install": "Zainstaluj aktualizację",
+      "remindLater": "Przypomnij mi później",
+      "skip": "Pomiń tę wersję"
+    },
+    "updateDownloading": {
+      "title": "Pobieranie aktualizacji",
+      "message": "Zostaniesz poinformowany gdy aktualizacja będzie gotowa do zainstalowania",
+      "ok": "OK"
+    },
+    "updateInstallLater": {
+      "title": "Instalowanie później",
+      "message": "Aktualizacja zostanie zainstalowana kiedy wyjdziesz z programu",
+      "ok": "OK"
+    },
+    "updateReady": {
+      "title": "Aktualizacja gotowa do instalacji",
+      "message": "Aktualizacja została pobrana",
+      "installNow": "Zainstaluj teraz",
+      "installLater": "Zainstaluj później"
+    },
+    "updateSkip": {
+      "title": "Pomiń aktualizację",
+      "message": "Powiadomimy Cię gdy będzie dostępna następna aktualizacja\nJeśli zmienisz zdanie możesz sprawdzić aktualizacje z menu O programie.",
+      "ok": "OK"
+    },
+    "selectClientCertificate": {
+      "announcement": "Wybierz Certyfikat",
+      "select": "Wybierz",
+      "validDates": "Ważny od {{-validStart,}} do {{-validExpiry,}}"
+    },
+    "mediaPermission": {
+      "title": "Wymagane Uprawnienie Mediów",
+      "message": "Dostęp do {{- permissionType}} jest obecnie wyłączony w ustawieniach systemu.",
+      "detail": "Aby włączyć funkcje rozmów wideo, proszę zezwolić na dostęp w ustawieniach prywatności systemu, a następnie uruchomić ponownie aplikację.",
+      "openSettings": "Otwórz Ustawienia",
+      "cancel": "Anuluj",
+      "microphone": "Mikrofon",
+      "camera": "Kamera",
+      "both": "Mikrofon i Kamera"
+    },
+    "microphonePermissionDenied": {
+      "title": "Wymagany dostęp do mikrofonu",
+      "message": "Do {{- actionType}} wymagany jest dostęp do mikrofonu. Sprawdź ustawienia systemowe.",
+      "detail": "Możesz włączyć dostęp do mikrofonu w ustawieniach prywatności systemu.",
+      "openSettings": "Otwórz ustawienia",
+      "cancel": "Anuluj",
+      "actionTypes": {
+        "initiateCall": "wykonywania połączeń",
+        "answerCall": "odbierania połączeń",
+        "recordMessage": "nagrywania wiadomości"
+      }
+    }
+  },
+  "documentViewer": {
+    "title": {
+      "pdf": "Przeglądarka PDF",
+      "markdown": "Przeglądarka Markdown"
+    },
+    "back": "Wstecz"
+  },
+  "downloads": {
+    "empty": {
+      "title": "Brak pobrań",
+      "subtitle": "Pobrane pliki pojawią się tutaj."
+    },
+    "noResults": {
+      "title": "Brak pasujących pobrań",
+      "subtitle": "Spróbuj dostosować filtry lub wyszukiwanie."
+    }
+  },
+  "settings": {
+    "title": "Ustawienia aplikacji",
+    "general": "Ogólne",
+    "sections": {
+      "appUi": "Interfejs aplikacji",
+      "systemUi": "Interfejs systemowy",
+      "systemBehavior": "Zachowanie systemu",
+      "calling": "Połączenia",
+      "other": "Inne i techniczne",
+      "logging": "Rejestrowanie"
+    },
+    "options": {
+      "report": {
+        "title": "Zgłaszaj błędy do Rocket.Chat",
+        "description": "Anonimowo zgłaszaj problemy do deweloperów aplikacji. Udostępniane informacje obejmują numer wersji aplikacji, typ systemu operacyjnego, adres URL obszaru roboczego, język urządzenia i rodzaj błędu. Żadne treści ani nazwy użytkowników nie są udostępniane.",
+        "masDescription": "Ta opcja jest wyłączona w przypadku instalacji z Mac App Store. Błędy są zgłaszane za pośrednictwem procesu raportowania błędów Mac App Store."
+      },
+      "flashFrame": {
+        "title": "Miganie ramki okna",
+        "titleDarwin": "Odbijanie ikony w docku",
+        "description": "Migaj oknem po otrzymaniu nowej wiadomości.",
+        "onLinux": "Niektóre dystrybucje Linuksa nie obsługują tej funkcji.",
+        "descriptionDarwin": "Ikona w docku odbija się po otrzymaniu nowej wiadomości."
+      },
+      "hardwareAcceleration": {
+        "title": "Akceleracja sprzętowa",
+        "description": "Poprawia renderowanie grafiki i wydajność. Wyłącz, jeśli występują błędy wizualne lub niestabilność.",
+        "hint": "Ponownie ładuje aplikację po zmianie."
+      },
+      "videoCallScreenCaptureFallback": {
+        "title": "Alternatywne przechwytywanie ekranu dla połączeń wideo",
+        "description": "Wyłącz funkcję Windows Graphics Capture, aby udostępnianie ekranu działało w sesjach Pulpitu zdalnego.",
+        "hint": "Aplikacja uruchamia się ponownie po zmianie tej opcji.",
+        "forcedDescription": "Obecnie wymuszone, ponieważ aplikacja wykryła sesję Pulpitu zdalnego. Przełącznik kontroluje teraz przyszłe uruchomienia przy pracy lokalnej."
+      },
+      "internalVideoChatWindow": {
+        "title": "Połączenia wideo wewnątrz aplikacji",
+        "description": "Otwieraj połączenia wideo w oknie aplikacji zamiast w przeglądarce. Połączenia Google Meet i Jitsi można otwierać tylko w przeglądarce.",
+        "masDescription": "Ta opcja jest wyłączona w przypadku instalacji z Mac App Store. Ze względów bezpieczeństwa połączenia wideo są domyślnie zawsze otwierane w przeglądarce."
+      },
+      "minimizeOnClose": {
+        "title": "Minimalizuj przy zamykaniu",
+        "description": "Minimalizuj aplikację zamiast zamykać ją przy kliknięciu przycisku zamknięcia.",
+        "disabledHint": "Ikona zasobnika musi być wyłączona."
+      },
+      "menubar": {
+        "title": "Pasek menu",
+        "description": "Pokazuj pasek menu u góry okna.",
+        "disabledHint": "Nie można wyłączyć paska menu, gdy pasek obszarów roboczych jest wyłączony. Ustawienia aplikacji stałyby się niedostępne."
+      },
+      "sidebar": {
+        "title": "Pasek obszarów roboczych",
+        "description": "Pokazuj listę obszarów roboczych z przyciskami pobrań i ustawień.",
+        "disabledHint": "Nie można wyłączyć paska obszarów roboczych, gdy pasek menu jest wyłączony. Ustawienia aplikacji stałyby się niedostępne."
+      },
+      "trayIcon": {
+        "title": "Ikona zasobnika",
+        "titleDarwin": "Dodatkowa ikona paska menu",
+        "description": "Wyświetla ikonę w zasobniku systemowym. Gdy ikona zasobnika jest aktywna, aplikacja będzie minimalizowana do zasobnika przy zamykaniu.",
+        "descriptionDarwin": "Pokazuje ikonę aplikacji na pasku menu."
+      },
+      "availableBrowsers": {
+        "title": "Domyślna przeglądarka",
+        "description": "Wybierz, która przeglądarka będzie otwierać linki zewnętrzne.",
+        "systemDefault": "Domyślna systemu",
+        "loading": "Ładowanie przeglądarek...",
+        "current": "Aktualnie używana:"
+      },
+      "telephonyServer": {
+        "title": "Obszar roboczy telefonii",
+        "description": "Wybierz, który obszar roboczy obsługuje przychodzące połączenia telefoniczne (łącza tel: i callto:).",
+        "auto": "Automatycznie (pytaj za każdym razem)"
+      },
+      "clearPermittedScreenCaptureServers": {
+        "title": "Wyczyść uprawnienia przechwytywania ekranu",
+        "description": "Wyczyść uprawnienia, nawet jeśli wcześniej wybrano opcję „nie pytaj ponownie” dla połączeń."
+      },
+      "allowScreenCaptureOnVideoCalls": {
+        "title": "Zezwalaj na przechwytywanie ekranu podczas połączeń wideo",
+        "description": "Zezwalaj na przechwytywanie ekranu podczas połączeń wideo. Prosi o uprawnienie przy każdym połączeniu wideo."
+      },
+      "ntlmCredentials": {
+        "title": "Poświadczenia NTLM",
+        "description": "Zezwalaj na używanie poświadczeń NTLM podczas łączenia się z obszarem roboczym.",
+        "domains": "Domeny, dla których będą używane poświadczenia. Oddzielone przecinkami. Użyj *, aby dopasować wszystkie serwery."
+      },
+      "videoCallWindowPersistence": {
+        "title": "Zachowaj pozycję okna połączenia wideo",
+        "description": "Pamiętaj pozycję i rozmiar okna połączenia wideo między sesjami."
+      },
+      "transparentWindow": {
+        "title": "Efekt przezroczystego okna",
+        "description": "Włącz natywny efekt przezroczystości w oknie aplikacji.",
+        "hint": "Wymaga ponownego uruchomienia."
+      },
+      "themeAppearance": {
+        "title": "Motyw",
+        "description": "Motyw kolorystyczny aplikacji.",
+        "auto": "Zgodnie z systemem",
+        "light": "Jasny",
+        "dark": "Ciemny"
+      },
+      "outlookCalendarSyncInterval": {
+        "title": "Interwał synchronizacji kalendarza Outlook",
+        "description": "Częstotliwość sprawdzania aktualizacji wydarzeń kalendarza w minutach (1–60)."
+      },
+      "verboseOutlookLogging": {
+        "title": "Szczegółowe rejestrowanie kalendarza Outlook",
+        "description": "Włącz szczegółowe dzienniki debugowania Exchange/NTLM do rozwiązywania problemów z integracją kalendarza Outlook."
+      },
+      "detailedEventsLogging": {
+        "title": "Szczegółowe rejestrowanie wydarzeń",
+        "description": "Rejestruj pełne dane wydarzeń wymienianych między Outlook a Rocket.Chat podczas synchronizacji kalendarza. Przydatne do diagnozowania problemów z synchronizacją."
+      },
+      "debugLogging": {
+        "title": "Szczegółowe rejestrowanie",
+        "description": "Zapisuje wszystkie dane wyjściowe konsoli do pliku dziennika. Gdy wyłączone, zapisywane są tylko błędy i ważne komunikaty, dzięki czemu dzienniki są mniejsze i bardziej skupione."
+      },
+      "e2ePdfPreviewSizeLimit": {
+        "title": "Limit rozmiaru podglądu PDF w zaszyfrowanych pokojach (MB)",
+        "description": "Zaszyfrowane pliki są ładowane do pamięci na potrzeby podglądu. Pliki większe niż ten limit będą pobierane bezpośrednio."
+      },
+      "telephonyShortcut": {
+        "title": "Globalny skrót telefonii",
+        "description": "Użyj tego skrótu z dowolnego miejsca, aby przenieść Rocket.Chat na pierwszy plan i otworzyć klawiaturę wybierania. Jeśli schowek zawiera tekst wyglądający jak numer telefonu, Rocket.Chat wypełni go automatycznie.",
+        "placeholder": "CommandOrControl+Shift+D",
+        "capturePlaceholder": "Naciśnij klawisze...",
+        "save": "Zapisz",
+        "clear": "Wyczyść",
+        "registered": "Skrót zarejestrowany",
+        "reservedAccelerator": "{{accelerator}} jest zarezerwowany przez Rocket.Chat lub system operacyjny."
+      }
+    }
+  },
+  "error": {
+    "authNeeded": "Wymagane uwierzytelnienie, spróbuj <strong>{{- auth}}</strong>",
+    "connectTimeout": "Przekroczony czas oczekiwania podczas próby połączenia",
+    "differentCertificate": "Certyfikat jest inny od poprzedniego.\n\n {{- detail}}",
+    "noValidServerFound": "Nie znaleziono prawidłowego serwera pod podanym URL",
+    "offline": "Sprawdź połączenie z Internetem!"
+  },
+  "landing": {
+    "invalidUrl": "Nieprawidłowy url",
+    "validating": "Sprawdzanie...",
+    "inputUrl": "Wprowadź adres swojego serwera",
+    "connect": "Połącz"
+  },
+  "menus": {
+    "about": "O programie {{- appName}}",
+    "addNewServer": "Dodaj &nowy serwer",
+    "back": "W&stecz",
+    "clearTrustedCertificates": "Wyczyść zaufane certyfikaty",
+    "close": "Zamknij",
+    "copy": "&Kopiuj",
+    "cut": "&Wytnij",
+    "developerMode": "Tryb programisty",
+    "documentation": "Dokumentacja",
+    "settings": "Ustawienia aplikacji",
+    "editMenu": "&Edycja",
+    "fileMenu": "&Plik",
+    "forward": "&Do przodu",
+    "helpMenu": "Po&moc",
+    "hide": "Ukryj {{- appName}}",
+    "hideOthers": "Ukryj pozostałych",
+    "learnMore": "Dowiedz się więcej",
+    "minimize": "Minimalizacja",
+    "openDevTools": "Otwórz &Narzędzia deweloperskie",
+    "paste": "Wk&lej",
+    "quit": "Wy&jdź {{- appName}}",
+    "redo": "P&onów",
+    "reload": "P&rzeładuj",
+    "reportIssue": "Raportowanie błędu",
+    "resetAppData": "Reset danych aplikacji",
+    "resetZoom": "Reset zoomu",
+    "selectAll": "&Zaznacz wszystko",
+    "services": "Usługi",
+    "showFullScreen": "Pełny ekran",
+    "showMenuBar": "Pasek menu",
+    "showOnUnreadMessage": "Pokaż nieprzeczytane wiadomości",
+    "showServerList": "Lista serwerów",
+    "showTrayIcon": "Ikona zasobnika",
+    "toggleDevTools": "Przełącz &Narzędzia deweloperskie",
+    "undo": "&Cofnij",
+    "unhide": "Pokaż wszystko",
+    "viewMenu": "&Widok",
+    "windowMenu": "&Okno",
+    "zoomIn": "Przybliż",
+    "zoomOut": "Oddal"
+  },
+  "loadingError": {
+    "title": "Błąd ładowania serwera",
+    "announcement": "Hjuston, mamy problem",
+    "reload": "Przeładuj"
+  },
+  "videoCall": {
+    "loading": {
+      "initial": "Ładowanie połączenia wideo...",
+      "reloading": "Ponowne ładowanie połączenia wideo...",
+      "description": "Proszę czekać, łączymy z połączeniem wideo"
+    },
+    "error": {
+      "title": "Nie udało się załadować połączenia wideo",
+      "announcement": "Houston, mamy problem",
+      "timeout": "Przekroczono czas oczekiwania - nie udało się załadować połączenia wideo w ciągu 15 sekund",
+      "crashed": "Webview się zawiesił",
+      "maxRetriesReached": "Nie udało się załadować po wielu próbach",
+      "reload": "Przeładuj połączenie wideo"
+    }
+  },
+  "selfxss": {
+    "title": "Stop!",
+    "description": "To jest funkcja przeglądarki dedykowana programistom. Jeśli ktoś powiedział Ci, by skopiować i wkleić coś tutaj aby włączyć funcjonalność Rocket.Chata lub \"zhackować\" czyjeś konto, to jest to oszustwo a Ty dasz temu komuś dostęp do swojego konta Rocket.Chat.",
+    "moreInfo": "Wejdź tutaj https://go.rocket.chat/i/xss po więcej informacji."
+  },
+  "sidebar": {
+    "addNewServer": "Dodaj nowy serwer",
+    "settings": "Ustawienia aplikacji",
+    "item": {
+      "reload": "Przeładuj serwer",
+      "remove": "Usuń serwer",
+      "openDevTools": "Otwórz Narzędzia deweloperskie"
+    }
+  },
+  "touchBar": {
+    "formatting": "Formatowanie",
+    "selectServer": "Wybierz serwer"
+  },
+  "tray": {
+    "menu": {
+      "show": "Pokaż",
+      "hide": "Ukryj",
+      "quit": "Wyjdź"
+    },
+    "tooltip": {
+      "noUnreadMessage": "{{- appName}}: Brak nieprzeczytanych wiadomości",
+      "unreadMention": "{{- appName}}: Masz nieprzeczytaną wzmiankę/wiadomość",
+      "unreadMention_plural": "{{- appName}}: Masz {{- count}} nieprzeczytanych wiadomości/wzmianek",
+      "unreadMessage": "{{- appName}}: Masz nieprzeczytane wiadomości"
+    },
+    "balloon": {
+      "stillRunning": {
+        "title": "{{- appName}} wciąż działa",
+        "content": "{{- appName }} jest ustawiony aby działał w zasobniku systemowym/obszarze powiadomień."
+      }
+    }
+  },
+  "taskbar": {
+    "unreadMessage": "Nieprzeczytane wiadomości",
+    "unreadMention": "Nieprzeczytane wzmianki",
+    "noUnreadMessage": "Brak nieprzeczytanych wiadomości"
+  },
+  "screenSharing": {
+    "permissionDenied": "Odmowa uprawnień do nagrywania ekranu",
+    "permissionRequired": "Uprawnienie do nagrywania ekranu jest wymagane, aby udostępnić ekran.",
+    "permissionInstructions": "Włącz je w preferencjach systemowych i spróbuj ponownie.",
+    "title": "Udostępnij swój ekran",
+    "entireScreen": "Cały ekran",
+    "applicationWindow": "Okno aplikacji",
+    "noScreensFound": "Nie znaleziono ekranów",
+    "noWindowsFound": "Nie znaleziono okien",
+    "cancel": "Anuluj",
+    "share": "Udostępnij"
+  },
+  "serverInfo": {
+    "title": "Informacje o serwerze",
+    "urlLabel": "URL:",
+    "versionLabel": "Wersja:",
+    "unknown": "Nieznana",
+    "exchangeUrlLabel": "URL Outlook Exchange:",
+    "supportedVersionsTitle": "Obsługiwane wersje",
+    "statusLabel": "Status:",
+    "status": {
+      "loading": "Ładowanie...",
+      "error": "Nie udało się załadować",
+      "loaded": "Załadowano",
+      "idle": "Bezczynny",
+      "from": "z {{source}}"
+    },
+    "supported": {
+      "unknown": "Nieznana",
+      "expiring": "Wygasa",
+      "yes": "Tak",
+      "no": "Nie"
+    },
+    "expiration": {
+      "label": "Wygaśnięcie:",
+      "expiresOn": "Wygasa {{date}}"
+    }
+  }
+}

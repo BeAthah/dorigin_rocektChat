@@ -1,0 +1,535 @@
+{
+  "contextMenu": {
+    "cut": "Cor&tar",
+    "copy": "&Copiar",
+    "paste": "&Pegar",
+    "selectAll": "Seleccionar &todo",
+    "undo": "&Deshacer",
+    "redo": "&Rehacer",
+    "spelling": "Ortografía",
+    "spellingLanguages": "Idiomas de ortografía",
+    "moreSpellingSuggestions": "Más sugerencias de ortografía",
+    "noSpellingSuggestions": "Sin sugerencias",
+    "copyLinkAddress": "Copiar dirección del enlace",
+    "copyLinkText": "Copiar texto del enlace",
+    "openLink": "Abrir enlace",
+    "saveImageAs": "Guardar imagen como...",
+    "copyImage": "Copiar imagen"
+  },
+  "dialog": {
+    "about": {
+      "title": "Acerca de {{- appName}}",
+      "version": "Versión: <1>{{-version}}</1>",
+      "checkUpdates": "Buscar actualizaciones",
+      "checkUpdatesOnStart": "Buscar actualizaciones al iniciar",
+      "noUpdatesAvailable": "No hay actualizaciones disponibles.",
+      "copyright": "Derechos de autor {{copyright}}",
+      "errorWhenLookingForUpdates": "Ha ocurrido un error al buscar actualizaciones",
+      "updateChannel": {
+        "label": "Canal de actualización",
+        "latest": "Estable",
+        "beta": "Beta",
+        "alpha": "Alfa (Experimental)"
+      }
+    },
+    "addServer": {
+      "title": "Agregar servidor",
+      "message": "¿Deseas agregar \"{{- host}}\" a tu lista de servidores?",
+      "add": "Agregar",
+      "cancel": "Cancelar"
+    },
+    "addServerError": {
+      "title": "Host no válido",
+      "message": "El host \"{{- host}}\" no pudo ser validado y no fue agregado."
+    },
+    "certificateError": {
+      "title": "Error de certificado",
+      "message": "¿Confías en el certificado de \"{{- issuerName}}\"?",
+      "yes": "Sí",
+      "no": "No"
+    },
+    "downloadRemoval": {
+      "title": "¿Estás seguro?",
+      "message": "¿Deseas eliminar esta descarga?",
+      "yes": "Sí",
+      "no": "No"
+    },
+    "resetAppData": {
+      "title": "Restablecer datos de la aplicación",
+      "message": "Esto cerrará tu sesión en todos tus equipos y restaurará la aplicación a su configuración original. Esto no se puede deshacer.",
+      "yes": "Sí",
+      "cancel": "Cancelar"
+    },
+    "clearPermittedScreenCaptureServers": {
+      "title": "Borrar permisos de captura de pantalla",
+      "message": "Esto borrará todos los permisos para los servidores de captura de pantalla, haciendo que se soliciten nuevamente. Esto no se puede deshacer.",
+      "yes": "Sí",
+      "cancel": "Cancelar"
+    },
+    "screenshare": {
+      "title": "Compartir tu pantalla",
+      "announcement": "Selecciona una pantalla para compartir"
+    },
+    "update": {
+      "title": "Actualización disponible",
+      "announcement": "Nueva actualización disponible",
+      "message": "¡Hay una nueva versión de la aplicación de Rocket.Chat Desktop disponible!",
+      "currentVersion": "Versión actual:",
+      "newVersion": "Nueva versión:",
+      "install": "Instalar actualización",
+      "remindLater": "Recordarme más tarde",
+      "skip": "Saltar esta versión"
+    },
+    "updateDownloading": {
+      "title": "Descargando actualización",
+      "message": "Serás notificado cuando la actualización esté lista para ser instalada",
+      "ok": "Aceptar"
+    },
+    "updateInstallLater": {
+      "title": "Instalar más tarde",
+      "message": "La actualización se instalará cuando cierres la aplicación",
+      "ok": "Aceptar"
+    },
+    "updateReady": {
+      "title": "Actualización lista para instalar",
+      "message": "La actualización ha sido descargada",
+      "installNow": "Instalar ahora",
+      "installLater": "Instalar más tarde"
+    },
+    "updateSkip": {
+      "title": "Saltar actualización",
+      "message": "Te notificaremos cuando esté disponible la próxima actualización.\nSi cambias de opinión, puedes buscar actualizaciones desde el menú Acerca de.",
+      "ok": "Aceptar"
+    },
+    "selectClientCertificate": {
+      "announcement": "Seleccionar certificado",
+      "select": "Seleccionar",
+      "validDates": "Válido desde {{-validStart,}} hasta {{-validExpiry,}}"
+    },
+    "openingExternalProtocol": {
+      "title": "Enlace con protocolo personalizado",
+      "message": "El enlace {{- protocol }} requiere una aplicación externa.",
+      "detail": "El enlace solicitado es {{- url }}. ¿Deseas continuar?",
+      "dontAskAgain": "Siempre abrir estos tipos de enlaces en la aplicación asociada",
+      "yes": "Sí",
+      "no": "No"
+    },
+    "allowVideoCallCaptureScreen": {
+      "title": "La videollamada intenta capturar tu pantalla",
+      "message": "La videollamada está solicitando permiso para capturar tu pantalla.",
+      "detail": "La videollamada del servidor {{- url }} requiere permiso para compartir tu pantalla con otros.",
+      "dontAskAgain": "Siempre permitir que las videollamadas de este servidor capturen tu pantalla",
+      "yes": "Permitir",
+      "no": "Cancelar"
+    },
+    "mediaPermission": {
+      "title": "Permiso de Medios Requerido",
+      "message": "El acceso al {{- permissionType}} está deshabilitado en la configuración de tu sistema.",
+      "detail": "Para habilitar las funciones de videollamada, por favor permite el acceso en la configuración de privacidad de tu sistema y luego reinicia la aplicación.",
+      "openSettings": "Abrir Configuración",
+      "cancel": "Cancelar",
+      "microphone": "Micrófono",
+      "camera": "Cámara",
+      "both": "Micrófono y Cámara"
+    },
+    "microphonePermissionDenied": {
+      "title": "Acceso al Micrófono Requerido",
+      "message": "Se requiere acceso al micrófono para {{- actionType}}. Por favor revisa la configuración de tu sistema.",
+      "detail": "Puedes habilitar el acceso al micrófono en la configuración de privacidad de tu sistema.",
+      "openSettings": "Abrir Configuración",
+      "cancel": "Cancelar",
+      "actionTypes": {
+        "initiateCall": "realizar llamadas",
+        "answerCall": "responder llamadas",
+        "recordMessage": "grabar mensajes"
+      }
+    },
+    "outlookCalendar": {
+      "title": "Calendario de Outlook",
+      "encryptionUnavailableTitle": "Encriptación no disponible",
+      "encryptionUnavailable": "Tu sistema operativo no admite encriptación.\nTus credenciales se guardarán en texto plano.",
+      "field_required": "Este campo es obligatorio",
+      "remember_credentials": "Recordar mis credenciales",
+      "cancel": "Cancelar",
+      "submit": "Iniciar sesión"
+    },
+    "supportedVersion": {
+      "title": "Versión de espacio de trabajo no admitida"
+    },
+    "telephonySelectServer": {
+      "title": "Seleccionar servidor",
+      "message": "¿Qué servidor debe gestionar esta llamada?",
+      "rememberChoice": "Recordar esta elección"
+    }
+  },
+  "documentViewer": {
+    "title": {
+      "pdf": "Visor de PDF",
+      "markdown": "Visor de Markdown"
+    },
+    "back": "Volver"
+  },
+  "downloads": {
+    "title": "Descargas",
+    "notifications": {
+      "downloadFinished": "Descarga finalizada",
+      "downloadInterrupted": "Descarga interrumpida",
+      "downloadCancelled": "Descarga cancelada",
+      "downloadFailed": "Descarga fallida",
+      "downloadExpired": "Descarga caducada",
+      "downloadExpiredMessage": "Por favor, intenta descargarlo de nuevo desde la fuente."
+    },
+    "filters": {
+      "search": "Buscar",
+      "server": "Servidor",
+      "mimeType": "Tipo",
+      "status": "Estado",
+      "clear": "Limpiar filtros",
+      "all": "Todos",
+      "mimes": {
+        "images": "Imágenes",
+        "videos": "Videos",
+        "audios": "Audios",
+        "texts": "Textos",
+        "files": "Archivos"
+      },
+      "statuses": {
+        "paused": "Pausada",
+        "cancelled": "Cancelada"
+      }
+    },
+    "item": {
+      "cancel": "Cancelar",
+      "copyLink": "Copiar enlace",
+      "errored": "Descarga cancelada",
+      "pause": "Pausar",
+      "progressSize": "{{receivedBytes, byteSize}} de {{totalBytes, byteSize}} ({{ratio, percentage}})",
+      "remove": "Eliminar de la lista",
+      "resume": "Reanudar",
+      "retry": "Reintentar",
+      "showInFolder": "Mostrar en la carpeta"
+    },
+    "showingResults": "Mostrando resultados {{first}} - {{last}} de {{count}}",
+    "empty": {
+      "title": "Aún no hay descargas",
+      "subtitle": "Los archivos que descargues aparecerán aquí."
+    },
+    "noResults": {
+      "title": "No hay descargas coincidentes",
+      "subtitle": "Intenta ajustar tus filtros o búsqueda."
+    }
+  },
+  "certificatesManager": {
+    "title": "Gestor de certificados",
+    "trustedCertificates": "Certificados de confianza",
+    "notTrustedCertificates": "Certificados no confiables",
+    "item": {
+      "domain": "Dominio",
+      "actions": "Acciones",
+      "remove": "Eliminar"
+    }
+  },
+  "settings": {
+    "title": "Ajustes de la app",
+    "general": "General",
+    "certificates": "Certificados",
+    "sections": {
+      "appUi": "Interfaz de la app",
+      "systemUi": "Interfaz del sistema",
+      "systemBehavior": "Comportamiento del sistema",
+      "calling": "Llamadas",
+      "other": "Otros y técnico",
+      "logging": "Registros"
+    },
+    "options": {
+      "report": {
+        "title": "Informar errores a Rocket.Chat",
+        "description": "Informar errores de forma anónima a los desarrolladores. La información compartida incluye el número de versión de la aplicación, el tipo de sistema operativo, la URL del espacio de trabajo, el idioma del dispositivo y el tipo de error. No se comparten contenidos ni nombres de usuario.",
+        "masDescription": "Esta opción está desactivada cuando se instala desde la Mac App Store. Los errores se informan a través del proceso de informe de errores de la Mac App Store."
+      },
+      "flashFrame": {
+        "title": "Destello de ventana",
+        "titleDarwin": "Rebotar icono del Dock",
+        "description": "Hace destellar la ventana cuando se recibe un nuevo mensaje.",
+        "onLinux": "Algunas distribuciones de Linux no admiten esta función.",
+        "descriptionDarwin": "El icono del Dock rebota cuando se recibe un nuevo mensaje."
+      },
+      "hardwareAcceleration": {
+        "title": "Aceleración de hardware",
+        "description": "Mejora el renderizado visual y el rendimiento. Desactívala si experimentas fallos visuales o inestabilidad.",
+        "hint": "Recarga la app al cambiar."
+      },
+      "videoCallScreenCaptureFallback": {
+        "title": "Modo alternativo de captura en videollamadas",
+        "description": "Desactiva Windows Graphics Capture para que el uso compartido de pantalla funcione en sesiones de Escritorio Remoto.",
+        "hint": "La app se reinicia cuando se cambia esta opción.",
+        "forcedDescription": "Actualmente está aplicado porque la app detectó una sesión de Escritorio Remoto. El interruptor controla el comportamiento en siguientes arranques locales."
+      },
+      "internalVideoChatWindow": {
+        "title": "Videollamadas dentro de la app",
+        "description": "Abrir videollamadas en la ventana de la app en lugar del navegador. Las llamadas de Google Meet y Jitsi solo pueden abrirse en el navegador.",
+        "masDescription": "Esta opción está desactivada cuando se instala desde la Mac App Store. Por razones de seguridad, las videollamadas siempre se abren en el navegador de forma predeterminada."
+      },
+      "minimizeOnClose": {
+        "title": "Minimizar al cerrar",
+        "description": "Minimizar la app y no cerrarla al hacer clic en el botón de cerrar.",
+        "disabledHint": "El icono de la bandeja debe estar desactivado."
+      },
+      "menubar": {
+        "title": "Barra de menú",
+        "description": "Mostrar la barra de menú en la parte superior de la ventana.",
+        "disabledHint": "No se puede desactivar la barra de menú cuando la barra de espacios de trabajo está desactivada. Los ajustes de la app serían inaccesibles."
+      },
+      "sidebar": {
+        "title": "Barra de espacios de trabajo",
+        "description": "Mostrar la lista de espacios de trabajo con botones de descargas y ajustes.",
+        "disabledHint": "No se puede desactivar la barra de espacios de trabajo cuando la barra de menú está desactivada. Los ajustes de la app serían inaccesibles."
+      },
+      "trayIcon": {
+        "title": "Icono de la bandeja",
+        "titleDarwin": "Extra en la barra de menú",
+        "description": "Mostrar el icono de la app en la bandeja del sistema. Al cerrarse, la app se oculta a la bandeja en lugar de salir cuando está activado.",
+        "descriptionDarwin": "Mostrar el icono de la app en la barra de menú."
+      },
+      "availableBrowsers": {
+        "title": "Navegador predeterminado",
+        "description": "Elige qué navegador abrirá los enlaces externos.",
+        "systemDefault": "Predeterminado del sistema",
+        "loading": "Cargando navegadores...",
+        "current": "Usando actualmente:"
+      },
+      "telephonyServer": {
+        "title": "Espacio de trabajo de telefonía",
+        "description": "Elige qué espacio de trabajo gestiona las llamadas telefónicas entrantes (enlaces tel: y callto:).",
+        "auto": "Automático (preguntar cada vez)"
+      },
+      "telephonyShortcut": {
+        "title": "Atajo global de telefonía",
+        "description": "Usa este atajo desde cualquier lugar para traer Rocket.Chat al frente y abrir el teclado de marcado de telefonía. Si tu portapapeles contiene texto que parece un número de teléfono, Rocket.Chat lo completará automáticamente.",
+        "placeholder": "CommandOrControl+Shift+D",
+        "capturePlaceholder": "Presiona las teclas...",
+        "save": "Guardar",
+        "clear": "Borrar",
+        "registered": "Atajo registrado",
+        "reservedByApp": "{{accelerator}} ya está en uso por Rocket.Chat. Elige otra combinación.",
+        "reservedByOS": "{{accelerator}} está reservado por tu sistema operativo. Elige otra combinación."
+      },
+      "clearPermittedScreenCaptureServers": {
+        "title": "Borrar permisos de captura de pantalla",
+        "description": "Borrar los permisos aunque se haya seleccionado «no volver a preguntar» anteriormente para las llamadas."
+      },
+      "allowScreenCaptureOnVideoCalls": {
+        "title": "Permitir captura de pantalla en videollamadas",
+        "description": "Permitir la captura de pantalla en videollamadas. Solicita permiso en cada videollamada."
+      },
+      "ntlmCredentials": {
+        "title": "Credenciales NTLM",
+        "description": "Permitir que se utilicen las credenciales NTLM al conectarse a un espacio de trabajo.",
+        "domains": "Dominios que utilizarán las credenciales. Separados por coma. Use * para coincidir con todos los servidores."
+      },
+      "videoCallWindowPersistence": {
+        "title": "Conservar posición de la ventana de videollamada",
+        "description": "Recordar la posición y el tamaño de la ventana de videollamada entre sesiones."
+      },
+      "transparentWindow": {
+        "title": "Efecto de ventana transparente",
+        "description": "Activar el efecto nativo de vibración en la ventana de la app.",
+        "hint": "Requiere reinicio."
+      },
+      "themeAppearance": {
+        "title": "Tema",
+        "description": "Tema de color de la app.",
+        "auto": "Seguir sistema",
+        "light": "Claro",
+        "dark": "Oscuro"
+      },
+      "outlookCalendarSyncInterval": {
+        "title": "Intervalo de sincronización del Calendario de Outlook",
+        "description": "Frecuencia de comprobación de actualizaciones de eventos del calendario en minutos (1–60)."
+      },
+      "verboseOutlookLogging": {
+        "title": "Registro detallado del Calendario de Outlook",
+        "description": "Activar registros de depuración detallados de Exchange/NTLM para diagnosticar problemas de integración con el Calendario de Outlook."
+      },
+      "detailedEventsLogging": {
+        "title": "Registro detallado de eventos",
+        "description": "Registrar los datos completos de eventos intercambiados entre Outlook y Rocket.Chat durante la sincronización del calendario. Útil para diagnosticar problemas de sincronización."
+      },
+      "debugLogging": {
+        "title": "Registro detallado",
+        "description": "Escribe toda la salida de consola en el archivo de registro. Cuando está desactivado, solo se guardan los errores y mensajes importantes, manteniendo los registros más pequeños y enfocados."
+      },
+      "e2ePdfPreviewSizeLimit": {
+        "title": "Límite de tamaño de vista previa de PDF en salas cifradas (MB)",
+        "description": "Los archivos cifrados se cargan en memoria para las vistas previas. Los archivos que superen este límite se descargarán directamente."
+      }
+    }
+  },
+  "error": {
+    "authNeeded": "Se necesita autenticación, prueba con <strong>{{- auth}}</strong>",
+    "connectTimeout": "Tiempo de conexión agotado",
+    "differentCertificate": "El certificado es diferente al anterior.\n\n {{- detail}}",
+    "noValidServerFound": "No se encontró ningún servidor válido en la URL",
+    "offline": "¡Verifica tu conexión a Internet!"
+  },
+  "landing": {
+    "invalidUrl": "URL no válida",
+    "validating": "Validando...",
+    "inputUrl": "Ingresa la URL de tu servidor",
+    "connect": "Conectar"
+  },
+  "menus": {
+    "about": "Acerca de {{- appName}}",
+    "addNewServer": "Agregar &nuevo servidor",
+    "back": "&Atrás",
+    "clearTrustedCertificates": "Borrar certificados de confianza",
+    "close": "Cerrar",
+    "copy": "&Copiar",
+    "cut": "Cor&tar",
+    "developerMode": "Modo desarrollador",
+    "disableGpu": "Deshabilitar GPU",
+    "documentation": "Documentación",
+    "downloads": "Descargas",
+    "settings": "Ajustes de la app",
+    "editMenu": "&Editar",
+    "fileMenu": "&Archivo",
+    "forward": "&Avanzar",
+    "helpMenu": "&Ayuda",
+    "hide": "Ocultar {{- appName}}",
+    "hideOthers": "Ocultar otros",
+    "learnMore": "Más información",
+    "minimize": "Minimizar",
+    "openDevTools": "Abrir &Herramientas de desarrollo",
+    "openDevToolsOnAllWindows": "Abrir &Herramientas de desarrollo en todas las ventanas",
+    "paste": "&Pegar",
+    "quit": "&Salir de {{- appName}}",
+    "redo": "&Rehacer",
+    "reload": "&Recargar",
+    "reportIssue": "Informar problema",
+    "resetAppData": "Restablecer datos de la aplicación",
+    "resetZoom": "Restablecer zoom",
+    "selectAll": "Seleccionar &todo",
+    "services": "Servicios",
+    "showFullScreen": "Pantalla completa",
+    "showMenuBar": "Barra de menú",
+    "showOnUnreadMessage": "Mostrar en mensajes no leídos",
+    "showServerList": "Lista de servidores",
+    "showTrayIcon": "Icono en la bandeja",
+    "toggleDevTools": "Alternar &Herramientas de desarrollo",
+    "undo": "&Deshacer",
+    "unhide": "Mostrar todos",
+    "viewMenu": "&Ver",
+    "windowMenu": "&Ventana",
+    "zoomIn": "Acercar",
+    "zoomOut": "Alejar"
+  },
+  "loadingError": {
+    "title": "Fallo al cargar el servidor",
+    "announcement": "Houston, tenemos un problema",
+    "reload": "Recargar"
+  },
+  "videoCall": {
+    "loading": {
+      "initial": "Cargando videollamada...",
+      "reloading": "Recargando videollamada...",
+      "description": "Por favor espera mientras nos conectamos a la videollamada"
+    },
+    "error": {
+      "title": "Error al cargar la videollamada",
+      "announcement": "Houston, tenemos un problema",
+      "timeout": "Tiempo de espera agotado - la videollamada no pudo cargar en 15 segundos",
+      "crashed": "Webview se ha bloqueado",
+      "maxRetriesReached": "Error al cargar después de múltiples intentos",
+      "reload": "Recargar videollamada"
+    }
+  },
+  "unsupportedServer": {
+    "title": "{{instanceDomain}} está ejecutando una versión no compatible de Rocket.Chat",
+    "announcement": "Un administrador debe actualizar el espacio de trabajo a una versión compatible para habilitar el acceso desde aplicaciones móviles y de escritorio.",
+    "moreInformation": "Más información"
+  },
+  "selfxss": {
+    "title": "¡Alto!",
+    "description": "Esta es una función del navegador destinada a los desarrolladores. Si alguien te pidió que copies y pegues algo aquí para habilitar una función de Rocket.Chat o \"hackear\" la cuenta de alguien, es un fraude y les dará acceso a tu cuenta de Rocket.Chat.",
+    "moreInfo": "Ver https://go.rocket.chat/i/xss para obtener más información."
+  },
+  "sidebar": {
+    "addNewServer": "Agregar nuevo servidor",
+    "downloads": "Descargas",
+    "settings": "Ajustes de la app",
+    "item": {
+      "reload": "Recargar servidor",
+      "remove": "Eliminar servidor",
+      "openDevTools": "Abrir Herramientas de desarrollo",
+      "clearCache": "Borrar caché",
+      "clearStorageData": "Borrar datos de almacenamiento",
+      "copyCurrentUrl": "Copiar URL actual"
+    }
+  },
+  "touchBar": {
+    "formatting": "Formato",
+    "selectServer": "Seleccionar servidor"
+  },
+  "tray": {
+    "menu": {
+      "show": "Mostrar",
+      "hide": "Ocultar",
+      "quit": "Salir"
+    },
+    "tooltip": {
+      "noUnreadMessage": "{{- appName}}: no hay mensajes sin leer",
+      "unreadMention": "{{- appName}}: tienes una mención/mensaje directo sin leer",
+      "unreadMention_plural": "{{- appName}}: tienes {{- count}} menciones/mensajes directos sin leer",
+      "unreadMessage": "{{- appName}}: tienes mensajes sin leer"
+    },
+    "balloon": {
+      "stillRunning": {
+        "title": "{{- appName}} todavía está en ejecución",
+        "content": "{{- appName}} está configurado para permanecer en ejecución en la bandeja del sistema/área de notificación."
+      }
+    }
+  },
+  "taskbar": {
+    "unreadMessage": "Mensajes no leídos",
+    "unreadMention": "Menciones no leídas",
+    "noUnreadMessage": "No hay mensajes no leídos"
+  },
+  "screenSharing": {
+    "permissionDenied": "Permiso de Grabación de Pantalla Denegado",
+    "permissionRequired": "Se requiere permiso de grabación de pantalla para compartir tu pantalla.",
+    "permissionInstructions": "Por favor, actívalo en las preferencias del sistema e inténtalo de nuevo.",
+    "title": "Compartir tu pantalla",
+    "entireScreen": "Tu pantalla completa",
+    "applicationWindow": "Ventana de aplicación",
+    "noScreensFound": "No se encontraron pantallas",
+    "noWindowsFound": "No se encontraron ventanas",
+    "cancel": "Cancelar",
+    "share": "Compartir"
+  },
+  "serverInfo": {
+    "title": "Información del Servidor",
+    "urlLabel": "URL:",
+    "versionLabel": "Versión:",
+    "unknown": "Desconocido",
+    "exchangeUrlLabel": "URL de Outlook Exchange:",
+    "supportedVersionsTitle": "Versiones Soportadas",
+    "statusLabel": "Estado:",
+    "status": {
+      "loading": "Cargando...",
+      "error": "Error al cargar",
+      "loaded": "Cargado",
+      "idle": "Inactivo",
+      "from": "desde {{source}}"
+    },
+    "supported": {
+      "unknown": "Desconocido",
+      "expiring": "Por expirar",
+      "yes": "Sí",
+      "no": "No"
+    },
+    "expiration": {
+      "label": "Expiración:",
+      "expiresOn": "Expira el {{date}}"
+    }
+  }
+}

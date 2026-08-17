@@ -1,0 +1,168 @@
+import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+
+import { setUser } from '../../actions/login';
+import I18n from '../../i18n';
+import log, { logEvent, events } from '../../lib/methods/helpers/log';
+import { compareServerVersion } from '../../lib/methods/helpers';
+import SafeAreaView from '../../containers/SafeAreaView';
+import * as List from '../../containers/List';
+import { getUserSelector } from '../../selectors/login';
+import { type ProfileStackParamList } from '../../stacks/types';
+import { saveUserPreferences } from '../../lib/services/restApi';
+import { useAppSelector } from '../../lib/hooks/useAppSelector';
+import ListPicker from './ListPicker';
+import Switch from '../../containers/Switch';
+import { type IUser } from '../../definitions';
+
+interface IUserPreferencesViewProps {
+	navigation: NativeStackNavigationProp<ProfileStackParamList, 'UserPreferencesView'>;
+}
+
+const UserPreferencesView = ({ navigation }: IUserPreferencesViewProps) => {
+	const { enableMessageParserEarlyAdoption, id, alsoSendThreadToChannel, settings } = useAppSelector(state =>
+		getUserSelector(state)
+	);
+	const serverVersion = useAppSelector(state => state.server.version);
+	const dispatch = useDispatch();
+	const convertAsciiEmoji = settings?.preferences?.convertAsciiEmoji;
+	const enableMobileRinging = settings?.preferences?.enableMobileRinging;
+
+	useEffect(() => {
+		navigation.setOptions({
+			title: I18n.t('Preferences')
+		});
+	}, [navigation]);
+
+	const navigateToScreen = (screen: keyof ProfileStackParamList) => {
+		logEvent(events.UP_GO_USER_NOTIFICATION_PREF);
+		// @ts-ignore
+		navigation.navigate(screen);
+	};
+
+	const toggleMessageParser = async (value: boolean) => {
+		try {
+			dispatch(setUser({ enableMessageParserEarlyAdoption: value }));
+			await saveUserPreferences({ id, enableMessageParserEarlyAdoption: value });
+		} catch (e) {
+			log(e);
+		}
+	};
+
+	const toggleConvertAsciiToEmoji = async (value: boolean) => {
+		try {
+			dispatch(
+				setUser({
+					settings: { ...settings, preferences: { ...settings?.preferences, convertAsciiEmoji: value } }
+				} as Partial<IUser>)
+			);
+			await saveUserPreferences({ convertAsciiEmoji: value });
+		} catch (e) {
+			log(e);
+		}
+	};
+
+	const toggleEnableMobileRinging = async (value: boolean) => {
+		try {
+			dispatch(
+				setUser({
+					settings: { ...settings, preferences: { ...settings?.preferences, enableMobileRinging: value } }
+				} as Partial<IUser>)
+			);
+			await saveUserPreferences({ enableMobileRinging: value });
+		} catch (e) {
+			log(e);
+		}
+	};
+
+	const setAlsoSendThreadToChannel = async (param: { [key: string]: string }, onError: () => void) => {
+		try {
+			await saveUserPreferences(param);
+			dispatch(setUser(param));
+		} catch (e) {
+			log(e);
+			onError();
+		}
+	};
+
+	return (
+		<SafeAreaView testID='preferences-view'>
+			<List.Container>
+				<List.Section>
+					<List.Separator />
+					<List.Item
+						title='Notifications'
+						onPress={() => navigateToScreen('UserNotificationPrefView')}
+						showActionIndicator
+						testID='preferences-view-notifications'
+					/>
+					<List.Separator />
+				</List.Section>
+				{compareServerVersion(serverVersion, 'lowerThan', '5.0.0') ? (
+					<List.Section>
+						<List.Separator />
+						<List.Item
+							title='Enable_Message_Parser'
+							right={() => (
+								<Switch
+									value={enableMessageParserEarlyAdoption}
+									onValueChange={toggleMessageParser}
+									testID='preferences-view-enable-message-parser'
+								/>
+							)}
+						/>
+						<List.Separator />
+					</List.Section>
+				) : null}
+				{compareServerVersion(serverVersion, 'greaterThanOrEqualTo', '5.0.0') ? (
+					<List.Section title='Also_send_thread_message_to_channel_behavior'>
+						<List.Separator />
+						<ListPicker
+							onChangeValue={setAlsoSendThreadToChannel}
+							preference='alsoSendThreadToChannel'
+							value={alsoSendThreadToChannel}
+							title='Message_composer_Send_to_channel'
+							testID='preferences-view-enable-message-parser'
+						/>
+						<List.Separator />
+						<List.Info info='Accounts_Default_User_Preferences_alsoSendThreadToChannel_Description' />
+					</List.Section>
+				) : null}
+				<List.Section>
+					<List.Separator />
+					<List.Item
+						title='Convert_ASCII_to_emoji'
+						right={() => (
+							<Switch
+								value={convertAsciiEmoji}
+								onValueChange={toggleConvertAsciiToEmoji}
+								testID='preferences-view-convert-ascii-to-emoji'
+							/>
+						)}
+						onPress={() => toggleConvertAsciiToEmoji(!convertAsciiEmoji)}
+					/>
+					<List.Separator />
+					{compareServerVersion(serverVersion, 'greaterThanOrEqualTo', '6.10.0') ? (
+						<>
+							<List.Item
+								title='Enable_Mobile_Ringing'
+								right={() => (
+									<Switch
+										value={enableMobileRinging}
+										onValueChange={toggleEnableMobileRinging}
+										testID='preferences-view-enable-mobile-ringing'
+									/>
+								)}
+								onPress={() => toggleEnableMobileRinging(!enableMobileRinging)}
+							/>
+							<List.Separator />
+						</>
+					) : null}
+				</List.Section>
+			</List.Container>
+		</SafeAreaView>
+	);
+};
+
+export default UserPreferencesView;

@@ -1,0 +1,196 @@
+import { useNavigation, type StaticScreenProps } from '@react-navigation/native';
+import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { WebView, type WebViewNavigation } from 'react-native-webview';
+import { type WebViewMessage } from 'react-native-webview/lib/WebViewTypes';
+import parse from 'url-parse';
+
+import ActivityIndicator from '../containers/ActivityIndicator';
+import * as HeaderButton from '../containers/Header/components/HeaderButton';
+import { type ICredentials } from '../definitions';
+import { userAgent } from '../lib/constants/userAgent';
+import { useAppSelector } from '../lib/hooks/useAppSelector';
+import { useDebounce } from '../lib/methods/helpers';
+import { loginOAuthOrSso } from '../lib/services/connect';
+import { type OutsideModalParamList } from '../stacks/types';
+import fetch, { type TMethods } from '../lib/methods/helpers/fetch';
+import { parseSamlOrCasRedirect } from '../lib/methods/helpers/parseSamlOrCasRedirect';
+
+// iframe uses a postMessage to send the token to the client
+// We'll handle this sending the token to the hash of the window.location
+// https://docs.rocket.chat/guides/developer-guides/iframe-integration/authentication#iframe-url
+// https://github.com/react-native-community/react-native-webview/issues/24#issuecomment-540130141
+const injectedJavaScript = `
+window.addEventListener('message', ({ data }) => {
+	if (typeof data === 'object') {
+		window.location.hash = JSON.stringify(data);
+	}
+});
+function wrap(fn) {
+	return function wrapper() {
+		var res = fn.apply(this, arguments);
+		window.ReactNativeWebView.postMessage(window.location.href);
+		return res;
+	}
+}
+history.pushState = wrap(history.pushState);
+history.replaceState = wrap(history.replaceState);
+window.addEventListener('popstate', function() {
+	window.ReactNativeWebView.postMessage(window.location.href);
+});
+`;
+
+const SSO_AUTH_TYPES = ['saml', 'cas', 'iframe'];
+
+type AuthenticationWebViewProps = StaticScreenProps<{ authType: string; url: string; ssoToken?: string }>;
+
+const AuthenticationWebView = ({ route }: AuthenticationWebViewProps) => {
+	const [loading, setLoading] = useState(false);
+	const [headerTitle, setHeaderTitle] = useState<string | null>(null);
+	const loggingRef = useRef(false);
+	const redirectHandledRef = useRef(false);
+
+	const navigation = useNavigation<NativeStackNavigationProp<OutsideModalParamList, 'AuthenticationWebView'>>();
+	const {
+		params: { authType, url, ssoToken }
+	} = route;
+
+	// Reset redirect guard when auth params change (e.g., user logs out and retries)
+	useEffect(() => {
+		redirectHandledRef.current = false;
+	}, [url, authType, ssoToken]);
+
+	const { Accounts_Iframe_api_method, Accounts_Iframe_api_url, server } = useAppSelector(state => ({
+		server: state.server.server,
+		Accounts_Iframe_api_url: state.settings.Accounts_Iframe_api_url as string,
+		Accounts_Iframe_api_method: state.settings.Accounts_Iframe_api_method as string
+	}));
+
+	const oauthRedirectRegex = new RegExp(`(?=.*(${server}))(?=.*(credentialToken))(?=.*(credentialSecret))`, 'g');
+	const iframeRedirectRegex = new RegExp(`(?=.*(${server}))(?=.*(event|loginToken|token))`, 'g');
+
+	// Force 3s delay so the server has time to evaluate the token
+	const debouncedLogin = useDebounce((params: ICredentials) => login(params), 3000);
+
+	const login = async (params: ICredentials) => {
+		if (loggingRef.current) {
+			return;
+		}
+		loggingRef.current = true;
+		try {
+			await loginOAuthOrSso(params);
+		} catch (e) {
+			console.warn(e);
+		} finally {
+			loggingRef.current = false;
+			navigation.pop();
+		}
+	};
+
+	const tryLogin = useDebounce(
+		async () => {
+			const data = await fetch(Accounts_Iframe_api_url, { method: Accounts_Iframe_api_method as TMethods }).then(response =>
+				response.json()
+			);
+			const resume = data?.login || data?.loginToken;
+			if (resume) {
+				login({ resume });
+			}
+		},
+		3000,
+		{ leading: true }
+	);
+
+	const handleSamlOrCasRedirect = (url: string): boolean => {
+		const result = parseSamlOrCasRedirect(url, authType, ssoToken);
+		if (!result) return false;
+		if (redirectHandledRef.current) return true;
+		redirectHandledRef.current = true;
+		if (result.kind === 'saml') {
+			login(result.payload);
+		} else {
+			debouncedLogin(result.payload);
+		}
+		return true;
+	};
+
+	const onNavigationStateChange = (webViewState: WebViewNavigation | WebViewMessage) => {
+		const url = decodeURIComponent(webViewState.url);
+
+		if (SSO_AUTH_TYPES.includes(authType)) {
+			try {
+				const parsed = parse(url, true);
+				setHeaderTitle(parsed.host || url);
+			} catch {
+				setHeaderTitle(url);
+			}
+		}
+		if (authType === 'saml' || authType === 'cas') {
+			handleSamlOrCasRedirect(url);
+			return;
+		}
+
+		if (authType === 'oauth') {
+			if (oauthRedirectRegex.test(url)) {
+				const parts = url.split('#');
+				const credentials = JSON.parse(parts[1]);
+				debouncedLogin({ oauth: { ...credentials } });
+			}
+		}
+
+		if (authType === 'iframe') {
+			if (iframeRedirectRegex.test(url)) {
+				const parts = url.split('#');
+				const credentials = JSON.parse(parts[1]);
+				switch (credentials.event) {
+					case 'try-iframe-login':
+						tryLogin();
+						break;
+					case 'login-with-token':
+						debouncedLogin({ resume: credentials.token || credentials.loginToken });
+						break;
+					default:
+					// Do nothing
+				}
+			}
+		}
+	};
+
+	const isIframe = authType === 'iframe';
+
+	useLayoutEffect(() => {
+		const urlTitle = headerTitle || parse(url, true).host;
+		const isSSOType = SSO_AUTH_TYPES.includes(authType);
+		const staticFallback = isSSOType ? 'SSO' : 'OAuth';
+
+		navigation.setOptions({
+			headerLeft: () => <HeaderButton.CloseModal />,
+			title: urlTitle || staticFallback
+		});
+	}, [authType, navigation, headerTitle, url]);
+
+	return (
+		<>
+			<WebView
+				source={{ uri: url }}
+				userAgent={userAgent}
+				// https://github.com/react-native-community/react-native-webview/issues/24#issuecomment-540130141
+				onMessage={({ nativeEvent }) => onNavigationStateChange(nativeEvent)}
+				onNavigationStateChange={onNavigationStateChange}
+				onShouldStartLoadWithRequest={req => {
+					if (authType === 'saml') {
+						return !handleSamlOrCasRedirect(req.url);
+					}
+					return true;
+				}}
+				injectedJavaScript={isIframe ? injectedJavaScript : undefined}
+				onLoadStart={() => setLoading(true)}
+				onLoadEnd={() => setLoading(false)}
+				incognito
+			/>
+			{loading ? <ActivityIndicator size='large' absolute /> : null}
+		</>
+	);
+};
+
+export default AuthenticationWebView;

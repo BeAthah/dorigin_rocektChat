@@ -1,0 +1,402 @@
+{
+  "contextMenu": {
+    "cut": "Kes",
+    "copy": "Kopyala",
+    "paste": "Yapıştır",
+    "selectAll": "Tümünü seç",
+    "undo": "Geri al",
+    "redo": "Yinele",
+    "spellingLanguages": "Yazım dilleri",
+    "moreSpellingSuggestions": "Daha fazla yazım önerisi",
+    "noSpellingSuggestions": "Öneri yok",
+    "copyLinkAddress": "Bağlantı adresini kopyala",
+    "copyLinkText": "Bağlantı metnini kopyala",
+    "openLink": "Bağlantıyı aç",
+    "saveImageAs": "Görseli farklı kaydet..."
+  },
+  "dialog": {
+    "about": {
+      "title": "Hakkında {{- appName}}",
+      "version": "Versiyon: <1>{{-version}}</1>",
+      "checkUpdates": "Güncellemeleri kontrol et",
+      "checkUpdatesOnStart": "Başlangıçta güncellemeleri kontrol et",
+      "noUpdatesAvailable": "Kullanıclabilir güncelleme yok.",
+      "copyright": "Telif hakkı {{copyright}}"
+    },
+    "addServer": {
+      "title": "Sunucu ekle",
+      "message": "\"{{- host}}\" sunucu listenize eklemek istiyor musunuz?",
+      "add": "Ekle",
+      "cancel": "İptal et"
+    },
+    "addServerError": {
+      "title": "Geçersiz host adresi",
+      "message": "The host \"{{- host}}\" doğrulanamadı yani eklenmedi."
+    },
+    "certificateError": {
+      "title": "Sertifika hatası",
+      "message": "\"{{- issuerName}}\" sertifikasına güvenmek istiyor musunuz?",
+      "yes": "Evet",
+      "no": "Hayır"
+    },
+    "resetAppData": {
+      "title": "Uygulama verisini sıfırla",
+      "message": "Bu işlem sizi tüm sunuculardan çıkartır ve uygulamayı orijinal ayarlarına döndürür. Bu geri alınamaz.",
+      "yes": "Evet",
+      "cancel": "İptal et"
+    },
+    "screenshare": {
+      "title": "Ekranınızı paylaşın",
+      "announcement": "Paylaşılacak ekran seçin"
+    },
+    "update": {
+      "title": "Güncelleme kullanılabilir",
+      "announcement": "Yeni bir sürüm kullanılabilir",
+      "message": "Rocket.Chat için yeni bir masaüstü sürümü mevcut!",
+      "currentVersion": "Mevcut versiyon:",
+      "newVersion": "Yeni versiyon:",
+      "install": "Güncellemeyi yükle",
+      "remindLater": "Daha sonra hatırlat",
+      "skip": "Bu sürümü atla"
+    },
+    "updateDownloading": {
+      "title": "Güncelleme indiriliyor",
+      "message": "Güncelleme yüklenmeye hazır olduğunda size bildirilecek.",
+      "ok": "TAMAM"
+    },
+    "updateInstallLater": {
+      "title": "Installing Later",
+      "message": "Uygulamadan çıktığınızda güncelleme yüklenecek",
+      "ok": "TAMAM"
+    },
+    "updateReady": {
+      "title": "Güncelleme Yüklemeye Hazır",
+      "message": "Güncelleme indirildi",
+      "installNow": "Şimdi yükle",
+      "installLater": "Daha sonra yükle"
+    },
+    "updateSkip": {
+      "title": "Güncellemeyi Atla",
+      "message": "Bir sonraki güncellemenin ne zaman yapılacağını size bildireceğiz. Fikrinizi değiştirirseniz Hakkında menüsünden güncellemeleri manuel kontrol edebilirsiniz.",
+      "ok": "TAMAM"
+    },
+    "mediaPermission": {
+      "title": "Medya İzni Gerekli",
+      "message": "{{- permissionType}} erişimi şu anda sistem ayarlarınızda devre dışı.",
+      "detail": "Video arama özelliklerini etkinleştirmek için lütfen sistem gizlilik ayarlarınızda erişime izin verin ve ardından uygulamayı yeniden başlatın.",
+      "openSettings": "Ayarları Aç",
+      "cancel": "İptal",
+      "microphone": "Mikrofon",
+      "camera": "Kamera",
+      "both": "Mikrofon ve Kamera"
+    },
+    "microphonePermissionDenied": {
+      "title": "Mikrofon Erişimi Gerekli",
+      "message": "{{- actionType}} için mikrofon erişimi gereklidir. Lütfen sistem ayarlarınızı kontrol edin.",
+      "detail": "Mikrofon erişimini sistem gizlilik ayarlarınızdan etkinleştirebilirsiniz.",
+      "openSettings": "Ayarları Aç",
+      "cancel": "İptal",
+      "actionTypes": {
+        "initiateCall": "aramalar yapmak",
+        "answerCall": "aramaları yanıtlamak",
+        "recordMessage": "mesaj kaydetmek"
+      }
+    }
+  },
+  "documentViewer": {
+    "title": {
+      "pdf": "PDF Görüntüleyici",
+      "markdown": "Markdown Görüntüleyici"
+    },
+    "back": "Geri"
+  },
+  "downloads": {
+    "empty": {
+      "title": "Henüz indirme yok",
+      "subtitle": "İndirdiğiniz dosyalar burada görünecek."
+    },
+    "noResults": {
+      "title": "Eşleşen indirme yok",
+      "subtitle": "Filtrelerinizi veya aramanızı ayarlamayı deneyin."
+    }
+  },
+  "settings": {
+    "title": "Uygulama ayarları",
+    "general": "Genel",
+    "sections": {
+      "appUi": "Uygulama arayüzü",
+      "systemUi": "Sistem arayüzü",
+      "systemBehavior": "Sistem davranışı",
+      "calling": "Arama",
+      "other": "Diğer ve teknik",
+      "logging": "Günlük kaydı"
+    },
+    "options": {
+      "report": {
+        "title": "Hataları Rocket.Chat'e bildir",
+        "description": "Sorunları uygulama geliştiricilerine anonim olarak bildirin. Paylaşılan bilgiler arasında uygulama sürüm numarası, işletim sistemi türü, çalışma alanı URL'si, cihaz dili ve hata türü yer alır. İçerik veya kullanıcı adları paylaşılmaz.",
+        "masDescription": "Mac App Store'dan yüklendiğinde bu seçenek devre dışı kalır. Hatalar Mac App Store hata raporlama süreci aracılığıyla iletilir."
+      },
+      "flashFrame": {
+        "title": "Pencere yanıp sönsün",
+        "titleDarwin": "Dock simgesini zıplat",
+        "description": "Yeni bir mesaj alındığında pencere yanıp söner.",
+        "onLinux": "Bazı Linux dağıtımları bu özelliği desteklememektedir.",
+        "descriptionDarwin": "Yeni bir mesaj alındığında Dock simgesi zıplar."
+      },
+      "hardwareAcceleration": {
+        "title": "Donanım hızlandırma",
+        "description": "Görsel işlemeyi ve performansı artırır. Görsel hatalar veya kararsızlık yaşıyorsanız devre dışı bırakın.",
+        "hint": "Değişiklik uygulamayı yeniden yükler."
+      },
+      "videoCallScreenCaptureFallback": {
+        "title": "Video arama ekran yakalama geri dönüşü",
+        "description": "Uzak Masaüstü oturumlarında ekran paylaşımının çalışması için Windows Grafik Yakalamayı devre dışı bırakın.",
+        "hint": "Bu seçenek değiştirildiğinde uygulama yeniden başlar.",
+        "forcedDescription": "Uygulama bir Uzak Masaüstü oturumu algıladığından şu anda zorunlu kılınmaktadır. Geçiş artık yerel olarak çalışırken gelecekteki başlatmaları kontrol eder."
+      },
+      "internalVideoChatWindow": {
+        "title": "Video aramalar uygulama içinde",
+        "description": "Video aramalarını tarayıcı yerine uygulama penceresinde açın. Google Meet ve Jitsi aramaları yalnızca tarayıcıda açılabilir.",
+        "masDescription": "Mac App Store'dan yüklendiğinde bu seçenek devre dışı kalır. Güvenlik nedeniyle video aramalar varsayılan olarak her zaman tarayıcıda açılır."
+      },
+      "minimizeOnClose": {
+        "title": "Kapatırken küçült",
+        "description": "Kapatırken uygulamadan çıkmak yerine küçültün.",
+        "disabledHint": "Tepsi simgesi devre dışı bırakılmalıdır."
+      },
+      "menubar": {
+        "title": "Menü çubuğu",
+        "description": "Pencerenin üstünde menü çubuğunu göster.",
+        "disabledHint": "Çalışma alanı çubuğu devre dışıyken menü çubuğu devre dışı bırakılamaz. Uygulama ayarlarına erişilemez hale gelirdi."
+      },
+      "sidebar": {
+        "title": "Çalışma alanı çubuğu",
+        "description": "İndirmeler ve ayarlar düğmeleriyle birlikte çalışma alanı listesini göster.",
+        "disabledHint": "Menü çubuğu devre dışıyken çalışma alanı çubuğu devre dışı bırakılamaz. Uygulama ayarlarına erişilemez hale gelirdi."
+      },
+      "trayIcon": {
+        "title": "Tepsi simgesi",
+        "titleDarwin": "Menü çubuğu ek öğesi",
+        "description": "Sistem tepsisinde bir simge gösterir. Tepsi simgesi etkinleştirildiğinde, uygulama kapatıldığında tepsiye gizlenir. Aksi takdirde uygulama kapatılır.",
+        "descriptionDarwin": "Uygulama simgesini menü çubuğunda göster."
+      },
+      "availableBrowsers": {
+        "title": "Varsayılan tarayıcı",
+        "description": "Bu uygulamadan harici bağlantıları hangi tarayıcının açacağını seçin.",
+        "systemDefault": "Sistem varsayılanı",
+        "loading": "Tarayıcılar yükleniyor...",
+        "current": "Şu anda kullanılan:"
+      },
+      "telephonyServer": {
+        "title": "Telefoni çalışma alanı",
+        "description": "Gelen telefon aramalarını (tel: ve callto: bağlantıları) hangi çalışma alanının yöneteceğini seçin.",
+        "auto": "Otomatik (her seferinde sor)"
+      },
+      "clearPermittedScreenCaptureServers": {
+        "title": "Ekran yakalama izinlerini temizle",
+        "description": "Arama için daha önce “bir daha sorma” seçilmiş olsa bile izinleri temizle."
+      },
+      "allowScreenCaptureOnVideoCalls": {
+        "title": "Video aramalarda ekran yakalamaya izin ver",
+        "description": "Video aramalarda ekran yakalamaya izin ver. Her video aramada izin ister."
+      },
+      "ntlmCredentials": {
+        "title": "NTLM kimlik bilgileri",
+        "description": "Bir çalışma alanına bağlanırken NTLM kimlik bilgilerinin kullanılmasına izin ver.",
+        "domains": "Kimlik bilgileri için kullanılacak alan adları. Virgülle ayrılır. Tüm sunucularla eşleştirmek için * kullanın."
+      },
+      "videoCallWindowPersistence": {
+        "title": "Video arama penceresi konumunu koru",
+        "description": "Oturumlar arasında video arama penceresinin konum ve boyutunu hatırla."
+      },
+      "transparentWindow": {
+        "title": "Şeffaf pencere efekti",
+        "description": "Uygulama penceresinde yerel titreşim/şeffaflık efektini etkinleştir.",
+        "hint": "Uygulama yeniden başlatması gerektirir."
+      },
+      "themeAppearance": {
+        "title": "Tema",
+        "description": "Uygulama renk teması.",
+        "auto": "Sistemi takip et",
+        "light": "Açık",
+        "dark": "Koyu"
+      },
+      "outlookCalendarSyncInterval": {
+        "title": "Outlook Takvimi eşitleme aralığı",
+        "description": "Takvim etkinlikleri güncelleme kontrollerinin dakika cinsinden sıklığı (1–60)."
+      },
+      "verboseOutlookLogging": {
+        "title": "Ayrıntılı Outlook Takvimi günlük kaydı",
+        "description": "Outlook Takvimi entegrasyon sorunlarını gidermek için ayrıntılı Exchange/NTLM hata ayıklama günlüklerini etkinleştir."
+      },
+      "detailedEventsLogging": {
+        "title": "Ayrıntılı olay günlük kaydı",
+        "description": "Takvim eşitlemesi sırasında Outlook ile Rocket.Chat arasında değiş tokuş edilen tam olay verilerini kaydet. Eşitleme sorunlarının teşhisinde kullanışlıdır."
+      },
+      "debugLogging": {
+        "title": "Ayrıntılı günlük kaydı",
+        "description": "Tüm konsol çıktısını günlük dosyasına yazar. Devre dışı bırakıldığında yalnızca hatalar ve önemli mesajlar kaydedilir; bu da günlükleri daha küçük ve odaklı tutar."
+      },
+      "e2ePdfPreviewSizeLimit": {
+        "title": "Şifrelenmiş odalarda PDF önizleme boyutu sınırı (MB)",
+        "description": "Şifrelenmiş dosyalar önizlemeler için belleğe yüklenir. Bu sınırdan büyük dosyalar doğrudan indirilir."
+      },
+      "telephonyShortcut": {
+        "title": "Genel telefon kısayolu",
+        "description": "Rocket.Chat'i öne getirmek ve telefon arama tuş takımını açmak için bu kısayolu her yerden kullanın. Panonuzda telefon numarasına benzeyen bir metin varsa Rocket.Chat bunu otomatik olarak doldurur.",
+        "placeholder": "CommandOrControl+Shift+D",
+        "capturePlaceholder": "Tuşlara basın...",
+        "save": "Kaydet",
+        "clear": "Temizle",
+        "registered": "Kısayol kaydedildi",
+        "reservedAccelerator": "{{accelerator}}, Rocket.Chat veya işletim sisteminiz tarafından ayrılmıştır."
+      }
+    }
+  },
+  "error": {
+    "authNeeded": "Yetkilendirme gerekli, deneyin <strong>{{- auth}}</strong>",
+    "connectTimeout": "Bağlanmaya çalışırken zaman aşımı oluştu",
+    "differentCertificate": "Sertifika bir önceki sürümden farklı.\n\n {{- detail}}",
+    "noValidServerFound": "Bağlantınızda geçerli bir sunucu bulunamadı",
+    "offline": "İnternet bağlantınızı kontrol edin!"
+  },
+  "landing": {
+    "invalidUrl": "Geçersiz bağlantı",
+    "validating": "Doğrulanıyor...",
+    "inputUrl": "Sunucu bağlantısını girin",
+    "connect": "Bağlan"
+  },
+  "menus": {
+    "about": "Hakkında {{- appName}}",
+    "addNewServer": "Yeni sunucu ekle",
+    "back": "&Geri dön",
+    "clearTrustedCertificates": "Güvenilen sertifikaları temizle",
+    "close": "Kapat",
+    "copy": "&Kopyala",
+    "cut": "Kes",
+    "developerMode": "Geliştirici Modu",
+    "documentation": "Dökümantasyon",
+    "editMenu": "&Düzenle",
+    "fileMenu": "&Dosya",
+    "forward": "&İleri",
+    "helpMenu": "&Yardım",
+    "learnMore": "Daha fazlasını öğren",
+    "minimize": "Minimize et",
+    "openDevTools": "&DevTools aç",
+    "paste": "&Yapıştır",
+    "quit": "&Çıkış yap {{- appName}}",
+    "redo": "&Yinele",
+    "reload": "&Yeniden yükle",
+    "settings": "Uygulama ayarları",
+    "reportIssue": "Hata bildir",
+    "resetAppData": "Uygulama verisini sıfırla",
+    "resetZoom": "Görünümü sıfırla",
+    "selectAll": "Tümünü seç",
+    "showFullScreen": "Tam ekran",
+    "showMenuBar": "Menü alanını göster",
+    "showOnUnreadMessage": "Okunmamış mesajlarda göster",
+    "showServerList": "Sunucu listesi",
+    "showTrayIcon": "Görev çubuğu ikonu",
+    "toggleDevTools": "&DevTools aç",
+    "undo": "&Geri al",
+    "viewMenu": "&Görünüm",
+    "windowMenu": "&Pencereler",
+    "zoomIn": "Yakınlaştır",
+    "zoomOut": "Uzaklaştır"
+  },
+  "loadingError": {
+    "title": "Sunucu yüklenirken hata oluştu",
+    "announcement": "Houston, bir sorunumuz var",
+    "reload": "Yeniden yükle"
+  },
+  "videoCall": {
+    "loading": {
+      "initial": "Video görüşme yükleniyor...",
+      "reloading": "Video görüşme yeniden yükleniyor...",
+      "description": "Video görüşmeye bağlanırken lütfen bekleyin"
+    },
+    "error": {
+      "title": "Video görüşme yüklenemedi",
+      "announcement": "Houston, bir problemimiz var",
+      "timeout": "Zaman aşımı - video görüşme 15 saniye içinde yüklenemedi",
+      "crashed": "Webview çöktü",
+      "maxRetriesReached": "Birden fazla deneme sonrası yükleme başarısız",
+      "reload": "Video görüşmeyi yeniden yükle"
+    }
+  },
+  "selfxss": {
+    "title": "Dur!",
+    "description": "Bu, geliştiricilere yönelik bir tarayıcı özelliğidir. Birisi size bir Rocket.Chat özelliğini etkinleştirmeniz veya herhangi bir şeyi kopyalayıp yapıştırmanızı söylediyse, bu bir aldatmacadır ve onlara Rocket.Chat hesabınıza erişme izni verir.",
+    "moreInfo": "Bkz. https://go.rocket.chat/i/xss"
+  },
+  "sidebar": {
+    "addNewServer": "Yeni sunucu ekle",
+    "settings": "Uygulama ayarları",
+    "item": {
+      "reload": "Sunucuyu yeniden yükle",
+      "remove": "Sunucuyu sil",
+      "openDevTools": "DevTools aç"
+    }
+  },
+  "touchBar": {
+    "formatting": "Bçimlendiriliyor",
+    "selectServer": "Sunucu seçin"
+  },
+  "tray": {
+    "menu": {
+      "show": "Göster",
+      "hide": "Gizle",
+      "quit": "Çıkış yap"
+    },
+    "tooltip": {
+      "noUnreadMessage": "{{- appName}}: okunmamış mesaj yok",
+      "unreadMention": "{{- appName}}: okunmamış bahsetme/direkt mesajınız var",
+      "unreadMention_plural": "{{- appName}}: {{- count}} okunmamış bahsetme/direkt mesajınız var",
+      "unreadMessage": "{{- appName}}: okunmamış mesajınız var"
+    }
+  },
+  "taskbar": {
+    "unreadMessage": "Okunmamış mesajlar",
+    "unreadMention": "Okunmamış bahsetmeler",
+    "noUnreadMessage": "Okunmamış mesaj yok"
+  },
+  "screenSharing": {
+    "permissionDenied": "Ekran Kaydetme İzni Reddedildi",
+    "permissionRequired": "Ekranınızı paylaşmak için ekran kaydetme izni gereklidir.",
+    "permissionInstructions": "Lütfen sistem tercihlerinizde etkinleştirin ve tekrar deneyin.",
+    "title": "Ekranınızı paylaşın",
+    "entireScreen": "Tüm ekranınız",
+    "applicationWindow": "Uygulama penceresi",
+    "noScreensFound": "Ekran bulunamadı",
+    "noWindowsFound": "Pencere bulunamadı",
+    "cancel": "İptal et",
+    "share": "Paylaş"
+  },
+  "serverInfo": {
+    "title": "Sunucu Bilgileri",
+    "urlLabel": "URL:",
+    "versionLabel": "Sürüm:",
+    "unknown": "Bilinmiyor",
+    "exchangeUrlLabel": "Outlook Exchange URL:",
+    "supportedVersionsTitle": "Desteklenen Sürümler",
+    "statusLabel": "Durum:",
+    "status": {
+      "loading": "Yükleniyor...",
+      "error": "Yükleme başarısız",
+      "loaded": "Yüklendi",
+      "idle": "Boşta",
+      "from": "{{source}} kaynağından"
+    },
+    "supported": {
+      "unknown": "Bilinmiyor",
+      "expiring": "Süresi doluyor",
+      "yes": "Evet",
+      "no": "Hayır"
+    },
+    "expiration": {
+      "label": "Son Kullanma:",
+      "expiresOn": "{{date}} tarihinde sona eriyor"
+    }
+  }
+}

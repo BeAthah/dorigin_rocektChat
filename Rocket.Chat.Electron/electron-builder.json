@@ -1,0 +1,187 @@
+{
+  "files": ["app/**/*", "package.json"],
+  "extraResources": [
+    "build/icon.ico",
+    {
+      "from": "build/RocketChatDefaultAppAssociations.xml",
+      "to": "RocketChatDefaultAppAssociations.xml"
+    },
+    "servers.json"
+  ],
+  "appId": "chat.rocket",
+  "protocols": [
+    { "name": "Rocket.Chat", "schemes": ["rocketchat"] },
+    { "name": "Rocket.Chat Telephony", "schemes": ["callto", "tel"] }
+  ],
+  "afterPack": "./build/afterPack.js",
+  "mac": {
+    "category": "public.app-category.productivity",
+    "target": ["dmg", "pkg", "zip", "mas"],
+    "icon": "build/icon.icns",
+    "bundleVersion": "26060",
+    "helperBundleId": "chat.rocket.electron.helper",
+    "type": "distribution",
+    "artifactName": "rocketchat-${version}-${os}.${ext}",
+    "mergeASARs": false,
+    "extendInfo": {
+      "NSMicrophoneUsageDescription": "I need access to your microphone to record the audio you want to send.",
+      "NSCameraUsageDescription": "I need access to your camera to record the video you want to send.",
+      "NSScreenCaptureDescription": "I need access to your screen to share it through video calls when you want to."
+    },
+    "hardenedRuntime": true,
+    "gatekeeperAssess": false,
+    "provisioningProfile": "Desktop.provisionprofile",
+    "entitlements": "build/entitlements.mac.plist",
+    "entitlementsInherit": "build/entitlements.mac.plist"
+  },
+  "dmg": {
+    "background": "build/background.png",
+    "contents": [
+      {
+        "type": "dir",
+        "x": 100,
+        "y": 211
+      },
+      {
+        "type": "link",
+        "path": "/Applications",
+        "x": 500,
+        "y": 211
+      }
+    ]
+  },
+  "pkg": {
+    "isRelocatable": false,
+    "overwriteAction": "upgrade"
+  },
+  "mas": {
+    "entitlements": "build/entitlements.mas.plist",
+    "entitlementsInherit": "build/entitlements.mas.inherit.plist",
+    "entitlementsLoginHelper": "build/entitlements.mas.inherit.plist",
+    "hardenedRuntime": false,
+    "asarUnpack": ["node_modules"],
+    "artifactName": "rocketchat-${version}-mas.${ext}"
+  },
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64", "ia32", "arm64"]
+      },
+      {
+        "target": "msi",
+        "arch": ["x64", "ia32", "arm64"]
+      },
+      {
+        "target": "zip",
+        "arch": ["x64", "ia32", "arm64"]
+      }
+    ],
+    "icon": "build/icon.ico",
+    "legalTrademarks": "",
+    "verifyUpdateCodeSignature": true,
+    "requestedExecutionLevel": "asInvoker",
+    "signAndEditExecutable": true,
+    "artifactName": "rocketchat-${version}-${os}-${arch}.${ext}",
+    "signtoolOptions": {
+      "sign": "./build/winSignKms.js",
+      "signingHashAlgorithms": ["sha256"],
+      "timeStampServer": "http://timestamp.digicert.com"
+    }
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": false,
+    "allowElevation": true,
+    "allowToChangeInstallationDirectory": true,
+    "installerIcon": "build/installerIcon.ico",
+    "uninstallerIcon": "build/uninstallerIcon.ico",
+    "installerSidebar": "build/installerSidebar.bmp",
+    "uninstallerSidebar": "build/uninstallerSidebar.bmp",
+    "uninstallDisplayName": "${productName} ${version}",
+    "include": "build/installer.nsh",
+    "license": "LICENSE",
+    "deleteAppDataOnUninstall": false,
+    "displayLanguageSelector": false,
+    "unicode": true,
+    "warningsAsErrors": true,
+    "runAfterFinish": true,
+    "createDesktopShortcut": "always",
+    "createStartMenuShortcut": true,
+    "menuCategory": false
+  },
+  "msiProjectCreated": "./build/msiProjectCreated.js",
+  "msi": {
+    "perMachine": true,
+    "warningsAsErrors": false,
+    "additionalWixArgs": ["-sval"]
+  },
+  "appx": {
+    "backgroundColor": "#2f343d",
+    "languages": ["en-US", "en-GB", "pt-BR"],
+    "identityName": "0B67C87C.RocketChat",
+    "publisher": "CN=BBFF7141-7CAF-4FCD-8930-083FCDE6E854",
+    "publisherDisplayName": "Rocket.Chat Technologies Corp.",
+    "applicationId": "RocketChat",
+    "displayName": "Rocket.Chat"
+  },
+  "linux": {
+    "target": ["AppImage", "tar.gz", "deb", "rpm", "snap", "flatpak"],
+    "executableName": "rocketchat-desktop",
+    "category": "GNOME;GTK;Network;InstantMessaging",
+    "desktop": {
+      "entry": {
+        "Name": "Rocket.Chat",
+        "Comment": "Official Rocket.Chat Desktop Client",
+        "GenericName": "Rocket.Chat",
+        "Categories": "GNOME;GTK;Network;InstantMessaging",
+        "MimeType": "x-scheme-handler/rocketchat;x-scheme-handler/callto;x-scheme-handler/tel;"
+      }
+    },
+    "artifactName": "rocketchat-${version}-${os}-${arch}.${ext}"
+  },
+  "deb": {
+    "fpm": ["--after-install=build/linux/postinst.sh"],
+    "recommends": ["xdg-desktop-portal", "xdg-desktop-portal-gtk"]
+  },
+  "rpm": {
+    "fpm": [
+      "--rpm-rpmbuild-define=_build_id_links none",
+      "--rpm-tag=Recommends: xdg-desktop-portal",
+      "--rpm-tag=Recommends: xdg-desktop-portal-gtk"
+    ]
+  },
+  "snap": {
+    "base": "core22",
+    "allowNativeWayland": false,
+    "plugs": [
+      "desktop",
+      "desktop-legacy",
+      "home",
+      "x11",
+      "wayland",
+      "unity7",
+      "browser-support",
+      "network",
+      "gsettings",
+      "pulseaudio",
+      "opengl",
+      "camera",
+      "audio-playback",
+      "audio-record",
+      "screen-inhibit-control",
+      "upower-observe",
+      "pipewire"
+    ]
+  },
+  "afterSign": "./build/notarize.js",
+  "generateUpdatesFilesForAllChannels": true,
+  "publish": [
+    {
+      "provider": "github",
+      "owner": "RocketChat",
+      "repo": "Rocket.Chat.Electron",
+      "vPrefixedTagName": false
+    }
+  ]
+}

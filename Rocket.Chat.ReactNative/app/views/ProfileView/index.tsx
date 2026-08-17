@@ -1,0 +1,435 @@
+import { type NativeStackNavigationOptions, type NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { type ReactElement, useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { Keyboard, ScrollView, View, type TextInput } from 'react-native';
+import { useDispatch } from 'react-redux';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import { useFocusEffect } from '@react-navigation/native';
+
+import useA11yErrorAnnouncement from '../../lib/hooks/useA11yErrorAnnouncement';
+import { setUser } from '../../actions/login';
+import { useActionSheet } from '../../containers/ActionSheet';
+import { AvatarWithEdit } from '../../containers/Avatar';
+import Button from '../../containers/Button';
+import * as HeaderButton from '../../containers/Header/components/HeaderButton';
+import KeyboardView from '../../containers/KeyboardView';
+import SafeAreaView from '../../containers/SafeAreaView';
+import { ControlledFormTextInput } from '../../containers/TextInput';
+import { LISTENER } from '../../containers/Toast';
+import { type IProfileParams } from '../../definitions';
+import { TwoFactorMethods } from '../../definitions/ITotp';
+import I18n from '../../i18n';
+import { compareServerVersion } from '../../lib/methods/helpers';
+import EventEmitter from '../../lib/methods/helpers/events';
+import { events, logEvent } from '../../lib/methods/helpers/log';
+import scrollPersistTaps from '../../lib/methods/helpers/scrollPersistTaps';
+import { saveUserProfile } from '../../lib/services/restApi';
+import { twoFactor } from '../../lib/services/twoFactor';
+import { getUserSelector } from '../../selectors/login';
+import { type ProfileStackParamList } from '../../stacks/types';
+import { useTheme } from '../../theme';
+import sharedStyles from '../Styles';
+import DeleteAccountActionSheetContent from './components/DeleteAccountActionSheetContent';
+import styles from './styles';
+import { useAppSelector } from '../../lib/hooks/useAppSelector';
+import { useMasterDetail } from '../../lib/hooks/useMasterDetail';
+import useParsedCustomFields from '../../lib/hooks/useParsedCustomFields';
+import CustomFields from '../../containers/CustomFields';
+import ListSeparator from '../../containers/List/ListSeparator';
+import handleSaveUserProfileError from '../../lib/methods/helpers/handleSaveUserProfileError';
+import logoutOtherLocations from './methods/logoutOtherLocations';
+import buildProfileParams from './methods/buildProfileParams';
+import ConfirmEmailChangeActionSheetContent from './components/ConfirmEmailChangeActionSheetContent';
+
+// https://github.com/RocketChat/Rocket.Chat/blob/174c28d40b3d5a52023ee2dca2e81dd77ff33fa5/apps/meteor/app/lib/server/functions/saveUser.js#L24-L25
+const MAX_BIO_LENGTH = 260;
+const MAX_NICKNAME_LENGTH = 120;
+
+interface IProfileViewProps {
+	navigation: NativeStackNavigationProp<ProfileStackParamList, 'ProfileView'>;
+}
+const ProfileView = ({ navigation }: IProfileViewProps): ReactElement => {
+	const validationSchema = yup.object().shape({
+		name: yup.string().required(I18n.t('Name_required')),
+		email: yup.string().email(I18n.t('Email_must_be_a_valid_email')).required(I18n.t('Email_required')),
+		username: yup.string().required(I18n.t('Username_required'))
+	});
+
+	const { showActionSheet, hideActionSheet } = useActionSheet();
+	const { colors } = useTheme();
+	const dispatch = useDispatch();
+	const {
+		Accounts_AllowDeleteOwnAccount,
+		Accounts_AllowEmailChange,
+		Accounts_AllowPasswordChange,
+		Accounts_AllowRealNameChange,
+		Accounts_AllowUserAvatarChange,
+		Accounts_AllowUsernameChange,
+		Accounts_CustomFields,
+		serverVersion,
+		user
+	} = useAppSelector(state => ({
+		user: getUserSelector(state),
+		Accounts_AllowEmailChange: state.settings.Accounts_AllowEmailChange as boolean,
+		Accounts_AllowPasswordChange: state.settings.Accounts_AllowPasswordChange as boolean,
+		Accounts_AllowRealNameChange: state.settings.Accounts_AllowRealNameChange as boolean,
+		Accounts_AllowUserAvatarChange: state.settings.Accounts_AllowUserAvatarChange as boolean,
+		Accounts_AllowUsernameChange: state.settings.Accounts_AllowUsernameChange as boolean,
+		Accounts_CustomFields: state.settings.Accounts_CustomFields as string,
+		serverVersion: state.server.version,
+		Accounts_AllowDeleteOwnAccount: state.settings.Accounts_AllowDeleteOwnAccount as boolean
+	}));
+	const isMasterDetail = useMasterDetail();
+	const {
+		control,
+		handleSubmit,
+		setFocus,
+		getValues,
+		setValue,
+		reset,
+		setError,
+		watch,
+		formState: { isDirty, errors }
+	} = useForm({
+		mode: 'onChange',
+		defaultValues: {
+			name: user?.name as string,
+			username: user?.username,
+			email: user?.emails ? user?.emails[0].address : null,
+			currentPassword: null,
+			bio: user?.bio,
+			nickname: user?.nickname,
+			saving: false
+		},
+		resolver: yupResolver(validationSchema)
+	});
+	const inputValues = watch();
+	const { parsedCustomFields } = useParsedCustomFields(Accounts_CustomFields);
+	const [customFields, setCustomFields] = useState(user?.customFields ?? {});
+	const [twoFactorCode, setTwoFactorCode] = useState<{ twoFactorCode: string; twoFactorMethod: TwoFactorMethods } | null>(null);
+	const customFieldsRef = useRef<{ [key: string]: TextInput | undefined }>({});
+
+	const isCustomFieldsDirty = () => {
+		if (!parsedCustomFields) return false;
+		const customFieldsKeys = Object.keys(parsedCustomFields);
+		return customFieldsKeys.some(key => user?.customFields?.[key] !== customFields[key]);
+	};
+
+	const focusOnCustomFields = () => {
+		if (!parsedCustomFields) return;
+		const [firstCustomFieldKey] = Object.keys(parsedCustomFields);
+
+		customFieldsRef.current[firstCustomFieldKey]?.focus();
+	};
+
+	const validateFormInfo = () => {
+		const isValid = validationSchema.isValidSync(getValues());
+		if (!parsedCustomFields) {
+			return isValid;
+		}
+		let requiredCheck = true;
+		Object.keys(parsedCustomFields).forEach((key: string) => {
+			if (parsedCustomFields[key].required) {
+				requiredCheck = requiredCheck && customFields[key] && Boolean(customFields[key].trim());
+			}
+		});
+		return isValid && requiredCheck;
+	};
+
+	const enableSaveChangesButton = () => {
+		const isFormInfoValid = validateFormInfo();
+		return isFormInfoValid && isDirty;
+	};
+
+	const handleEditAvatar = () => {
+		navigation.navigate('ChangeAvatarView', { context: 'profile' });
+	};
+
+	const navigateToChangePasswordView = () => {
+		navigation.navigate('ChangePasswordView');
+	};
+
+	const deleteOwnAccount = () => {
+		logEvent(events.DELETE_OWN_ACCOUNT);
+		showActionSheet({ children: <DeleteAccountActionSheetContent /> });
+	};
+
+	const showConfirmEmailChangeActionSheet = () => {
+		showActionSheet({
+			children: (
+				<ConfirmEmailChangeActionSheetContent
+					onSubmit={async p => {
+						hideActionSheet();
+						setValue('currentPassword', p as any);
+						await submit();
+					}}
+				/>
+			)
+		});
+	};
+
+	const resetSavingState = () => {
+		setValue('saving', false);
+		setValue('currentPassword', null);
+		setTwoFactorCode(null);
+	};
+
+	const applySaveSuccess = (params: IProfileParams) => {
+		logEvent(events.PROFILE_SAVE_CHANGES);
+
+		const updatedUser = { ...user, ...params };
+
+		reset({
+			name: updatedUser.name || '',
+			username: updatedUser.username || '',
+			email: updatedUser.emails?.[0]?.address || updatedUser.email || '',
+			currentPassword: null,
+			bio: updatedUser.bio || '',
+			nickname: updatedUser.nickname || '',
+			saving: false
+		});
+		dispatch(setUser({ ...user, ...params, customFields }));
+		EventEmitter.emit(LISTENER, { message: I18n.t('Profile_saved_successfully') });
+	};
+
+	const setFieldErrorsFromResponse = (e: any, email: string | null) => {
+		if (e?.error === 'error-could-not-save-identity') {
+			setError('username', { message: I18n.t('Username_not_available'), type: 'validate' });
+		}
+
+		if (email && e?.message?.startsWith(email) && e?.error === 'error-field-unavailable') {
+			setError('email', { message: I18n.t('Email_associated_with_another_user'), type: 'validate' });
+		}
+	};
+
+	// Returns true if a 2FA retry was issued and submit should yield to it.
+	const handleTwoFactorChallenge = async (e: any): Promise<boolean> => {
+		if (e?.error !== 'totp-invalid' || e?.details.method === TwoFactorMethods.PASSWORD) {
+			return false;
+		}
+		try {
+			const code = await twoFactor({ method: e.details.method, invalid: e?.error === 'totp-invalid' && !!twoFactorCode });
+			setTwoFactorCode(code as any);
+			await submit();
+			return true;
+		} catch {
+			// cancelled twoFactor modal
+			return false;
+		}
+	};
+
+	const submit = async (): Promise<void> => {
+		Keyboard.dismiss();
+
+		if (!validateFormInfo()) {
+			return;
+		}
+
+		setValue('saving', true);
+
+		const params = buildProfileParams(getValues(), user);
+		const requirePassword = !!params.email;
+
+		if (requirePassword && !params.currentPassword) {
+			setValue('saving', false);
+			showConfirmEmailChangeActionSheet();
+			return;
+		}
+
+		try {
+			const result = await saveUserProfile(params, customFields);
+			if (result) {
+				applySaveSuccess(params);
+			}
+			resetSavingState();
+		} catch (e: any) {
+			const { email } = getValues();
+			setFieldErrorsFromResponse(e, email);
+
+			const retried = await handleTwoFactorChallenge(e);
+			if (retried) return;
+
+			logEvent(events.PROFILE_SAVE_CHANGES_F);
+			resetSavingState();
+			handleSaveUserProfileError(e, 'saving_profile');
+		}
+	};
+
+	useA11yErrorAnnouncement({ errors, inputValues });
+
+	useLayoutEffect(() => {
+		const options: NativeStackNavigationOptions = {
+			title: I18n.t('Profile')
+		};
+		if (!isMasterDetail) {
+			options.headerLeft = () => (
+				<HeaderButton.Drawer
+					testID='profile-view-open-sidebar'
+					accessibilityLabel={I18n.t('Open_sidebar')}
+					navigation={navigation}
+				/>
+			);
+		}
+		options.headerRight = () => (
+			<HeaderButton.Preferences
+				accessibilityLabel={I18n.t('Preferences')}
+				onPress={() => navigation?.navigate('UserPreferencesView')}
+				testID='preferences-view-open'
+			/>
+		);
+
+		navigation.setOptions(options);
+	}, [navigation, isMasterDetail]);
+
+	useFocusEffect(
+		useCallback(() => {
+			reset();
+		}, [])
+	);
+
+	return (
+		<KeyboardView>
+			<SafeAreaView testID='profile-view'>
+				<ScrollView
+					contentContainerStyle={[sharedStyles.containerScrollView, { backgroundColor: colors.surfaceTint, paddingTop: 32 }]}
+					testID='profile-view-list'
+					{...scrollPersistTaps}>
+					<View style={styles.avatarContainer} testID='profile-view-avatar'>
+						<AvatarWithEdit
+							editAccessibilityLabel={I18n.t('Edit_Avatar')}
+							text={user.username}
+							handleEdit={Accounts_AllowUserAvatarChange ? handleEditAvatar : undefined}
+						/>
+					</View>
+					<View style={styles.inputs}>
+						<ControlledFormTextInput
+							required
+							name='name'
+							control={control}
+							editable={Accounts_AllowRealNameChange}
+							inputStyle={[!Accounts_AllowRealNameChange && styles.disabled]}
+							label={I18n.t('Name')}
+							placeholder={I18n.t('Name')}
+							autoComplete='name'
+							importantForAutofill={'yes'}
+							textContentType='name'
+							onSubmitEditing={() => {
+								setFocus('username');
+							}}
+							containerStyle={styles.inputContainer}
+							testID='profile-view-name'
+							error={errors.name?.message}
+						/>
+						<ControlledFormTextInput
+							required
+							name='username'
+							control={control}
+							editable={Accounts_AllowUsernameChange}
+							inputStyle={[!Accounts_AllowUsernameChange && styles.disabled]}
+							label={I18n.t('Username')}
+							placeholder={I18n.t('Username')}
+							autoComplete='username'
+							textContentType='username'
+							importantForAutofill={'yes'}
+							onSubmitEditing={() => {
+								setFocus('email');
+							}}
+							containerStyle={styles.inputContainer}
+							testID='profile-view-username'
+							error={errors.username?.message}
+						/>
+						<ControlledFormTextInput
+							required
+							name='email'
+							control={control}
+							editable={Accounts_AllowEmailChange}
+							inputStyle={[!Accounts_AllowEmailChange && styles.disabled]}
+							label={I18n.t('Email')}
+							placeholder={I18n.t('Email')}
+							onSubmitEditing={() => {
+								setFocus('nickname');
+							}}
+							containerStyle={styles.inputContainer}
+							testID='profile-view-email'
+							autoComplete='email'
+							textContentType='emailAddress'
+							importantForAutofill={'yes'}
+							error={errors.email?.message}
+						/>
+						{compareServerVersion(serverVersion, 'greaterThanOrEqualTo', '3.5.0') ? (
+							<ControlledFormTextInput
+								name='nickname'
+								control={control}
+								label={I18n.t('Nickname')}
+								onSubmitEditing={() => {
+									setFocus('bio');
+								}}
+								testID='profile-view-nickname'
+								maxLength={MAX_NICKNAME_LENGTH}
+								containerStyle={styles.inputContainer}
+							/>
+						) : null}
+						{compareServerVersion(serverVersion, 'greaterThanOrEqualTo', '3.1.0') ? (
+							<ControlledFormTextInput
+								name='bio'
+								control={control}
+								label={I18n.t('Bio')}
+								inputStyle={styles.inputBio}
+								multiline
+								maxLength={MAX_BIO_LENGTH}
+								onSubmitEditing={focusOnCustomFields}
+								testID='profile-view-bio'
+								containerStyle={styles.inputContainer}
+							/>
+						) : null}
+
+						<CustomFields
+							customFieldsRef={customFieldsRef}
+							Accounts_CustomFields={Accounts_CustomFields}
+							customFields={customFields}
+							onCustomFieldChange={value => setCustomFields(value)}
+						/>
+					</View>
+
+					<Button
+						title={I18n.t('Save_Changes')}
+						type='primary'
+						onPress={handleSubmit(submit)}
+						disabled={!enableSaveChangesButton() && !isCustomFieldsDirty()}
+						testID='profile-view-submit'
+						loading={getValues().saving}
+						style={{ marginBottom: 0 }}
+					/>
+
+					<ListSeparator style={{ marginVertical: 12 }} />
+					{Accounts_AllowPasswordChange ? (
+						<Button
+							title={I18n.t('Change_my_password')}
+							type='secondary'
+							onPress={navigateToChangePasswordView}
+							testID='profile-view-change-my-password-button'
+						/>
+					) : null}
+					<Button
+						title={I18n.t('Logout_from_other_logged_in_locations')}
+						type='secondary'
+						onPress={logoutOtherLocations}
+						testID='profile-view-logout-other-locations'
+					/>
+					{Accounts_AllowDeleteOwnAccount ? (
+						<Button
+							title={I18n.t('Delete_my_account')}
+							type='secondary'
+							styleText={{ color: colors.fontDanger }}
+							onPress={deleteOwnAccount}
+							testID='profile-view-delete-my-account'
+						/>
+					) : null}
+				</ScrollView>
+			</SafeAreaView>
+		</KeyboardView>
+	);
+};
+
+export default ProfileView;

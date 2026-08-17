@@ -1,0 +1,147 @@
+import type { AnyAction } from 'redux';
+
+import type { Download } from '../downloads/common';
+import type { OutlookEventsResponse } from '../outlookCalendar/type';
+import type { Server } from '../servers/common';
+import type { TelephonyDiagnostics } from '../telephony/diagnostics';
+import type { SystemIdleState } from '../userPresence/common';
+
+type ChannelToArgsMap = {
+  'redux/get-initial-state': () => unknown;
+  'redux/action-dispatched': (action: AnyAction) => void;
+  'servers/fetch-info': (urlHref: string) => [urlHref: string, version: string];
+  'notifications/fetch-icon': (urlHref: string) => string;
+  'power-monitor/get-system-idle-state': (
+    idleThreshold: number
+  ) => SystemIdleState;
+  'downloads/show-in-folder': (itemId: Download['itemId']) => void;
+  'downloads/copy-link': (itemId: Download['itemId']) => void;
+  'downloads/pause': (itemId: Download['itemId']) => void;
+  'downloads/resume': (itemId: Download['itemId']) => void;
+  'downloads/cancel': (itemId: Download['itemId']) => void;
+  'downloads/retry': (itemId: Download['itemId']) => void;
+  'downloads/remove': (itemId: Download['itemId']) => void;
+  'certificatesManager/remove': (domain: string) => void;
+  'server-view/get-url': () => Server['url'] | undefined;
+  'server-view/ready': () => void;
+  'server-view/open-url-on-browser': (url: string) => void;
+  'video-call-window/open-window': (
+    url: string,
+    options?: {
+      providerName?: string;
+      credentials?: { userId: string; authToken: string };
+    }
+  ) => void;
+  'video-call-window/open-url': (url: string) => void;
+  'video-call-window/open-in-main-window': (path: string) => void;
+  'video-call-window/web-contents-id': (webContentsId: number) => void;
+  'video-call-window/open-screen-picker': () => { success: boolean };
+  'video-call-window/screen-sharing-source-responded': (source: string) => void;
+  'video-call-window/screen-recording-is-permission-granted': () => boolean;
+  'video-call-window/close-requested': () => { success: boolean };
+  'video-call-window/open-webview-dev-tools': () => boolean;
+  'video-call-window/test-ipc': () => { success: boolean; timestamp: number };
+  'video-call-window/handshake': () => { success: boolean; timestamp: number };
+  'video-call-window/renderer-ready': () => { success: boolean };
+  'video-call-window/request-url': () => {
+    success: boolean;
+    url: string | null;
+    autoOpenDevtools: boolean;
+    partition?: string;
+  };
+  'video-call-window/url-received': () => { success: boolean };
+  'video-call-window/webview-created': () => { success: boolean };
+  'video-call-window/webview-loading': () => { success: boolean };
+  'video-call-window/webview-ready': () => { success: boolean };
+  'video-call-window/webview-failed': (error: string) => { success: boolean };
+  'video-call-window/get-credentials': () => {
+    userId: string;
+    authToken: string;
+    serverUrl: string;
+  } | null;
+  'video-call-window/get-language': () => {
+    success: boolean;
+    language: string;
+  };
+  'video-call-window/prewarm-capturer-cache': () => {
+    success: boolean;
+  };
+  'jitsi-desktop-capturer-get-sources': (
+    args: [options: Electron.SourcesOptions, jitsiDomain: string]
+  ) => Electron.DesktopCapturerSource[];
+  'desktop-capturer-get-sources': (
+    options: Electron.SourcesOptions
+  ) => Electron.DesktopCapturerSource[];
+  'outlook-calendar/get-events': (date: Date) => OutlookEventsResponse;
+  'outlook-calendar/set-exchange-url': (url: string, userId: string) => void;
+  'outlook-calendar/has-credentials': () => boolean;
+  'outlook-calendar/clear-credentials': () => void;
+  'outlook-calendar/set-user-token': (token: string, userId: string) => void;
+  'browser/open-url': (url: string) => void;
+  'document-viewer/open-window': (
+    url: string,
+    format: string,
+    options: any
+  ) => void;
+  'document-viewer/fetch-content': (url: string, serverUrl: string) => string;
+  'log-viewer-window/open-window': () => void;
+  'log-viewer-window/close-requested': () => void;
+  'log-viewer-window/select-log-file': () => {
+    success: boolean;
+    filePath?: string;
+    fileName?: string;
+    canceled?: boolean;
+    error?: string;
+  };
+  'log-viewer-window/read-logs': (options?: {
+    filePath?: string;
+    limit?: number | 'all';
+  }) => {
+    success: boolean;
+    logs?: string;
+    filePath?: string;
+    fileName?: string;
+    isDefaultLog?: boolean;
+    lastModifiedTime?: number;
+    error?: string;
+  };
+  'log-viewer-window/stat-log': (options?: { filePath?: string }) => {
+    success: boolean;
+    lastModifiedTime?: number;
+    size?: number;
+    error?: string;
+  };
+  'log-viewer-window/read-logs-tail': (options: {
+    fromByte: number;
+    filePath?: string;
+  }) => {
+    success: boolean;
+    logs?: string;
+    newSize?: number;
+    lastModifiedTime?: number;
+    error?: string;
+  };
+  'log-viewer-window/confirm-clear-logs': () => boolean;
+  'log-viewer-window/clear-logs': () => { success: boolean; error?: string };
+  'log-viewer-window/save-logs': (options: {
+    content: string;
+    defaultFileName: string;
+  }) => {
+    success: boolean;
+    filePath?: string;
+    canceled?: boolean;
+    error?: string;
+  };
+  'log-viewer-window/get-server-mapping': () => {
+    success: boolean;
+    mapping: Record<string, string>;
+  };
+  'screen-picker/open': () => void;
+  'screen-picker/source-responded': (sourceId: string | null) => void;
+  'screen-picker/screen-recording-is-permission-granted': () => boolean;
+  'screen-picker/open-url': (url: string) => void;
+  'telephony/get-diagnostics': () => TelephonyDiagnostics;
+};
+
+export type Channel = keyof ChannelToArgsMap;
+export type Handler<N extends Channel> = ChannelToArgsMap[N];

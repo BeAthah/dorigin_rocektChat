@@ -1,0 +1,55 @@
+.DS_Store
+Thumbs.db
+*.log
+
+/.vscode
+/node_modules
+
+/app
+/dist
+/Development.provisionprofile
+
+# npm (this project uses yarn)
+/package-lock.json
+
+# yarn
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+supportedVersions.jwt
+# local research (git-ignored)
+localdev/
+
+# caches and temp
+/coverage
+jest_dx/
+node-compile-cache/
+coderabbit-update-*/
+
+# Claude Code local config
+.claude/
+
+# ByteRover context-tree (local knowledge base)
+.brv/
+
+# mastermind (local knowledge base)
+.knowledge/
+
+# OpenWolf local tooling state
+.wolf/
+
+# MSI test harness artifacts
+scripts/msi-test/logs/
+scripts/msi-test/.known_hosts
+
+# dylib artifacts
+*.dylib
+
+# legacy agent docs (consolidated into CLAUDE.md)
+AGENTS.md
+src/outlookCalendar/AGENTS.md
+.gitnexus

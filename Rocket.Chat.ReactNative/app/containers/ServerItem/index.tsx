@@ -1,0 +1,81 @@
+import { memo } from 'react';
+import { PixelRatio, Text, View } from 'react-native';
+import { Image } from 'expo-image';
+
+import * as List from '../List';
+import styles, { ROW_HEIGHT } from './styles';
+import { useTheme } from '../../theme';
+import Touchable from './Touchable';
+import I18n from '../../i18n';
+import { useResponsiveLayout } from '../../lib/hooks/useResponsiveLayout/useResponsiveLayout';
+
+export { ROW_HEIGHT };
+export { default as ServerItemTouchable } from './Touchable';
+export type { IServerItemTouchableProps } from './Touchable';
+
+export interface IServerItem {
+	item: {
+		id: string;
+		iconURL: string;
+		name: string;
+		useRealName?: boolean;
+	};
+	onPress(): void;
+	onDeletePress?(): void;
+	hasCheck?: boolean;
+}
+
+const defaultLogo = require('../../static/images/logo.png');
+
+const ServerItem = memo(({ item, onPress, onDeletePress, hasCheck }: IServerItem) => {
+	const { colors } = useTheme();
+	const { width, fontScale } = useResponsiveLayout();
+	const height = PixelRatio.roundToNearestPixel(ROW_HEIGHT * fontScale);
+
+	const iconName = hasCheck ? 'radio-checked' : 'radio-unchecked';
+	const iconColor = hasCheck ? colors.badgeBackgroundLevel2 : colors.strokeMedium;
+	const accessibilityLabel = `${item.name || item.id}. ${item.id}. ${I18n.t(hasCheck ? 'Selected' : 'Unselected')}`;
+
+	const accessibilityHint = onDeletePress
+		? I18n.t('Activate_to_select_server_Available_actions_delete')
+		: I18n.t('Activate_to_select_server');
+
+	return (
+		<Touchable
+			accessibilityLabel={accessibilityLabel}
+			accessibilityRole='radio'
+			accessibilityHint={accessibilityHint}
+			onPress={onPress}
+			onDeletePress={onDeletePress}
+			testID={`server-item-${item.id}`}
+			width={width}>
+			<View style={[styles.serverItemContainer, { height }]}>
+				{item.iconURL ? (
+					<Image
+						source={{
+							uri: item.iconURL
+						}}
+						placeholder={defaultLogo}
+						style={styles.serverIcon}
+						onError={() => console.log('err_loading_server_icon')}
+						contentFit='contain'
+					/>
+				) : (
+					<Image source={defaultLogo} style={styles.serverIcon} contentFit='contain' />
+				)}
+				<View style={styles.serverTextContainer}>
+					<Text numberOfLines={1} style={[styles.serverName, { color: colors.fontTitlesLabels }]}>
+						{item.name || item.id}
+					</Text>
+					<Text numberOfLines={1} style={[styles.serverUrl, { color: colors.fontSecondaryInfo }]}>
+						{item.id}
+					</Text>
+				</View>
+
+				<List.Icon name={iconName} color={iconColor} />
+			</View>
+		</Touchable>
+	);
+});
+
+export default ServerItem;

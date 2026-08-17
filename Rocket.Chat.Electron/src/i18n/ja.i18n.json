@@ -1,0 +1,407 @@
+{
+  "contextMenu": {
+    "cut": "切り取り (&T)",
+    "copy": "コピー (&C)",
+    "paste": "貼り付け (&P)",
+    "selectAll": "全て選択 (&A)",
+    "undo": "元に戻す (&U)",
+    "redo": "やり直し (&R)",
+    "spellingLanguages": "スペルチェックの言語",
+    "moreSpellingSuggestions": "その他のスペルの提案",
+    "noSpellingSuggestions": "提案はありません",
+    "copyLinkAddress": "リンクURLをコピー",
+    "copyLinkText": "リンクテキストをコピー",
+    "openLink": "リンクを開く",
+    "saveImageAs": "画像を保存..."
+  },
+  "dialog": {
+    "about": {
+      "title": "{{- appName}} について",
+      "version": "バージョン: <1>{{-version}}</1>",
+      "checkUpdates": "アップデートを確認",
+      "checkUpdatesOnStart": "起動時に更新を確認",
+      "noUpdatesAvailable": "利用可能な更新はありません。",
+      "copyright": "著作権 {{copyright}}"
+    },
+    "addServer": {
+      "title": "サーバーを追加",
+      "message": "サーバーリストに\"{{- host}}\"を追加しますか?",
+      "add": "追加",
+      "cancel": "キャンセル"
+    },
+    "addServerError": {
+      "title": "無効なホスト",
+      "message": "ホスト \"{{- host}}\" を検証できなかったため、追加されませんでした。"
+    },
+    "certificateError": {
+      "title": "証明書のエラー",
+      "message": "\"{{- issuerName}}\"から証明書を信頼しますか?",
+      "yes": "はい",
+      "no": "いいえ"
+    },
+    "resetAppData": {
+      "title": "アプリのデータをリセット",
+      "message": "すべてのチームからログアウトしアプリを元の設定に戻すことができます。 これは元に戻すことはできません。",
+      "yes": "はい",
+      "cancel": "キャンセル"
+    },
+    "screenshare": {
+      "title": "画面共有",
+      "announcement": "共有する画面を選択"
+    },
+    "update": {
+      "title": "利用可能な更新",
+      "announcement": "新しい更新が利用可能です",
+      "message": "Rocket.Chat デスクトップアプリの新しいバージョンが利用可能です!",
+      "currentVersion": "現在のバージョン:",
+      "newVersion": "新しいバージョン:",
+      "install": "更新プログラムをインストール",
+      "remindLater": "後で知らせる",
+      "skip": "このバージョンをスキップ"
+    },
+    "updateDownloading": {
+      "title": "更新プログラムをダウンロード中",
+      "message": "更新プログラムのインストール準備が整うと通知されます",
+      "ok": "OK"
+    },
+    "updateInstallLater": {
+      "title": "後でインストール",
+      "message": "アプリを終了すると更新プログラムがインストールされます",
+      "ok": "OK"
+    },
+    "updateReady": {
+      "title": "更新プログラムをインストールする準備が整いました",
+      "message": "更新プログラムがダウンロードされました",
+      "installNow": "今すぐインストール",
+      "installLater": "後でインストール"
+    },
+    "updateSkip": {
+      "title": "更新をスキップ",
+      "message": "次回の更新プログラムが利用可能になったときにお知らせします。\n気になる場合は[バージョン情報]メニューから更新プログラムを確認できます。",
+      "ok": "OK"
+    },
+    "mediaPermission": {
+      "title": "メディア許可が必要",
+      "message": "{{- permissionType}}へのアクセスは現在システム設定で無効になっています。",
+      "detail": "ビデオ通話機能を有効にするには、システムのプライバシー設定でアクセスを許可してからアプリケーションを再起動してください。",
+      "openSettings": "設定を開く",
+      "cancel": "キャンセル",
+      "microphone": "マイク",
+      "camera": "カメラ",
+      "both": "マイクとカメラ"
+    },
+    "microphonePermissionDenied": {
+      "title": "マイクアクセスが必要",
+      "message": "{{- actionType}}にはマイクアクセスが必要です。システム設定を確認してください。",
+      "detail": "システムのプライバシー設定でマイクアクセスを有効にできます。",
+      "openSettings": "設定を開く",
+      "cancel": "キャンセル",
+      "actionTypes": {
+        "initiateCall": "通話を行う",
+        "answerCall": "通話に応答する",
+        "recordMessage": "メッセージを録音する"
+      }
+    },
+    "telephonySelectServer": {
+      "title": "サーバーを選択",
+      "message": "この通話をどのサーバーで処理しますか？",
+      "rememberChoice": "この選択を記憶する"
+    }
+  },
+  "documentViewer": {
+    "title": {
+      "pdf": "PDFビューアー",
+      "markdown": "Markdownビューアー"
+    },
+    "back": "戻る"
+  },
+  "downloads": {
+    "empty": {
+      "title": "まだダウンロードはありません",
+      "subtitle": "ダウンロードしたファイルはここに表示されます。"
+    },
+    "noResults": {
+      "title": "一致するダウンロードはありません",
+      "subtitle": "フィルターや検索条件を変更してお試しください。"
+    }
+  },
+  "settings": {
+    "title": "アプリの設定",
+    "general": "一般",
+    "sections": {
+      "appUi": "アプリUI",
+      "systemUi": "システムUI",
+      "systemBehavior": "システムの動作",
+      "calling": "通話",
+      "other": "その他・技術",
+      "logging": "ログ"
+    },
+    "options": {
+      "report": {
+        "title": "エラーをRocket.Chatに報告する",
+        "description": "アプリの問題を匿名で開発者に報告します。共有される情報にはアプリのバージョン番号、OSの種類、ワークスペースのURL、端末の言語、エラーの種類が含まれます。コンテンツやユーザー名は共有されません。",
+        "masDescription": "Mac App Storeからインストールされている場合、このオプションは無効です。エラーはMac App Storeのエラー報告プロセスを通じて報告されます。"
+      },
+      "flashFrame": {
+        "title": "フラッシュフレーム",
+        "titleDarwin": "Dockアイコンをバウンス",
+        "description": "新しいメッセージを受信したときにウィンドウをフラッシュします。",
+        "onLinux": "一部のLinuxディストリビューションではこの機能をサポートしていません。",
+        "descriptionDarwin": "新しいメッセージを受信したときにDockアイコンがバウンスします。"
+      },
+      "hardwareAcceleration": {
+        "title": "ハードウェアアクセラレーション",
+        "description": "映像レンダリングとパフォーマンスを向上させます。画面の乱れや不安定さが生じる場合は無効にしてください。",
+        "hint": "変更するとアプリが再起動します。"
+      },
+      "videoCallScreenCaptureFallback": {
+        "title": "ビデオ通話の画面キャプチャーフォールバック",
+        "description": "リモートデスクトップセッションで画面共有が機能するようにWindows Graphics Captureを無効にします。",
+        "hint": "このオプションを変更するとアプリが再起動します。",
+        "forcedDescription": "アプリがリモートデスクトップセッションを検出したため、現在強制適用されています。このトグルはローカルで実行する際の将来の起動を制御します。"
+      },
+      "internalVideoChatWindow": {
+        "title": "アプリ内でビデオ通話",
+        "description": "ブラウザーではなくアプリウィンドウ内でビデオ通話を開きます。Google Meet と Jitsi の通話はブラウザーでのみ開くことができます。",
+        "masDescription": "Mac App Storeからインストールされている場合、このオプションは無効です。セキュリティ上の理由から、ビデオ通話は既定でブラウザーで開きます。"
+      },
+      "minimizeOnClose": {
+        "title": "閉じるときに最小化",
+        "description": "閉じるときにアプリを終了せずに最小化します。",
+        "disabledHint": "トレイアイコンを無効にする必要があります。"
+      },
+      "menubar": {
+        "title": "メニューバー",
+        "description": "ウィンドウ上部にメニューバーを表示します。",
+        "disabledHint": "ワークスペースバーが無効になっている場合はメニューバーを無効にできません。アプリの設定にアクセスできなくなります。"
+      },
+      "sidebar": {
+        "title": "ワークスペースバー",
+        "description": "ダウンロードと設定ボタン付きのワークスペース一覧を表示します。",
+        "disabledHint": "メニューバーが無効になっている場合はワークスペースバーを無効にできません。アプリの設定にアクセスできなくなります。"
+      },
+      "trayIcon": {
+        "title": "トレイアイコン",
+        "titleDarwin": "メニューバーエクストラ",
+        "description": "システムトレイにトレイアイコンを表示します。有効にすると、閉じるときにアプリが終了せずにトレイに格納されます。",
+        "descriptionDarwin": "メニューバーにアプリアイコンを表示します。"
+      },
+      "availableBrowsers": {
+        "title": "既定のブラウザー",
+        "description": "外部リンクを開くブラウザーを選択します。",
+        "systemDefault": "システムの既定",
+        "loading": "ブラウザーを読み込み中...",
+        "current": "現在使用中:"
+      },
+      "telephonyServer": {
+        "title": "電話ワークスペース",
+        "description": "着信通話（tel:、callto: リンク）を処理するワークスペースを選択します。",
+        "auto": "自動（毎回確認）"
+      },
+      "clearPermittedScreenCaptureServers": {
+        "title": "画面キャプチャーの権限をクリア",
+        "description": "通話で「今後確認しない」を選択済みの場合でも権限をクリアします。"
+      },
+      "allowScreenCaptureOnVideoCalls": {
+        "title": "ビデオ通話での画面キャプチャーを許可",
+        "description": "ビデオ通話での画面キャプチャーを許可します。ビデオ通話ごとに権限を確認します。"
+      },
+      "ntlmCredentials": {
+        "title": "NTLM認証情報",
+        "description": "ワークスペースへの接続時にNTLM認証情報の使用を許可します。",
+        "domains": "認証情報として使用するドメイン。カンマ区切りで入力してください。* を使用するとすべてのサーバーに一致します。"
+      },
+      "videoCallWindowPersistence": {
+        "title": "ビデオ通話ウィンドウの位置を保持",
+        "description": "セッション間でビデオ通話ウィンドウの位置とサイズを記憶します。"
+      },
+      "transparentWindow": {
+        "title": "透明ウィンドウ効果",
+        "description": "ウィンドウのネイティブなビブランシー/透明効果を有効にします。",
+        "hint": "適用するには再起動が必要です。"
+      },
+      "themeAppearance": {
+        "title": "テーマ",
+        "description": "アプリケーションのカラーテーマを選択します。",
+        "auto": "システムに従う",
+        "light": "ライト",
+        "dark": "ダーク"
+      },
+      "telephonyServer": {
+        "title": "テレフォニーサーバー",
+        "description": "テレフォニーショートカットまたは tel: / callto: リンクを使用したときに開くワークスペースを選択します。",
+        "auto": "自動（毎回確認）"
+      },
+      "telephonyShortcut": {
+        "title": "テレフォニーのグローバルショートカット",
+        "description": "このショートカットをどこからでも使用して Rocket.Chat を前面に表示し、テレフォニーのダイヤルパッドを開きます。クリップボードに電話番号のようなテキストがある場合、Rocket.Chat が自動的に入力します。",
+        "placeholder": "CommandOrControl+Shift+D",
+        "capturePlaceholder": "キーを押してください...",
+        "save": "保存",
+        "clear": "クリア",
+        "registered": "ショートカットを登録しました",
+        "reservedAccelerator": "{{accelerator}} は Rocket.Chat またはオペレーティングシステムによって予約されています。"
+      },
+      "outlookCalendarSyncInterval": {
+        "title": "Outlookカレンダーの同期間隔",
+        "description": "カレンダーイベントの更新確認頻度（分単位、1〜60）。"
+      },
+      "verboseOutlookLogging": {
+        "title": "Outlookカレンダーの詳細ログ",
+        "description": "Outlookカレンダー連携の問題解決のためにExchange/NTLMデバッグログを有効にします。"
+      },
+      "detailedEventsLogging": {
+        "title": "イベントの詳細ログ",
+        "description": "カレンダー同期時にOutlookとRocket.Chat間でやり取りされるイベントデータ全体をログに記録します。同期の問題の診断に役立ちます。"
+      },
+      "debugLogging": {
+        "title": "詳細ログ",
+        "description": "すべてのコンソール出力をログファイルに書き込みます。無効にすると、エラーと重要なメッセージのみが保存され、ログが小さくまとまります。"
+      },
+      "e2ePdfPreviewSizeLimit": {
+        "title": "暗号化ルームでのPDFプレビューサイズ制限（MB）",
+        "description": "暗号化されたファイルはプレビューのためにメモリーに読み込まれます。この制限を超えるファイルは直接ダウンロードされます。"
+      }
+    }
+  },
+  "error": {
+    "authNeeded": "認証が必要です。<strong>{{- auth}}</strong> を試してみてください。",
+    "connectTimeout": "再接続がタイムアウトしました",
+    "differentCertificate": "証明書は以前の証明書とは異なります。\n\n {{- detail}}",
+    "noValidServerFound": "そのURLで有効なサーバーは見つかりません",
+    "offline": "インターネット接続を確認してください!"
+  },
+  "landing": {
+    "invalidUrl": "無効なURL",
+    "validating": "検証中...",
+    "inputUrl": "サーバーのURLを入力してください",
+    "connect": "接続"
+  },
+  "menus": {
+    "about": "{{- appName}} について",
+    "addNewServer": "新しいサーバーを追加 (&N)",
+    "back": "戻る (&B)",
+    "clearTrustedCertificates": "信頼する証明書をクリア",
+    "close": "閉じる",
+    "copy": "コピー (&C)",
+    "cut": "切り取り (&T)",
+    "developerMode": "開発者モード",
+    "documentation": "ドキュメント",
+    "settings": "アプリの設定",
+    "editMenu": "編集 (&E)",
+    "fileMenu": "ファイル (&F)",
+    "forward": "進む(&F)",
+    "helpMenu": "ヘルプ (&H)",
+    "learnMore": "もっと詳しく知る",
+    "minimize": "最小化",
+    "openDevTools": "開発ツールを開く (&D)",
+    "paste": "貼り付け (&P)",
+    "quit": "{{- appName}} を終了 (&Q)",
+    "redo": "やり直し (&R)",
+    "reload": "再読み込み(&R)",
+    "reportIssue": "問題を報告する",
+    "resetAppData": "アプリデータをリセット",
+    "resetZoom": "ズームをリセット",
+    "selectAll": "全て選択 (&A)",
+    "showFullScreen": "全画面",
+    "showMenuBar": "メニューバー",
+    "showOnUnreadMessage": "未読メッセージを表示",
+    "showServerList": "サーバー一覧",
+    "showTrayIcon": "トレイアイコン",
+    "toggleDevTools": "開発ツールの切り替え (&D)",
+    "undo": "元に戻す (&U)",
+    "viewMenu": "表示 (&V)",
+    "windowMenu": "ウィンドウ (&W)",
+    "zoomIn": "拡大",
+    "zoomOut": "縮小"
+  },
+  "loadingError": {
+    "title": "サーバーの読み込みに失敗しました",
+    "announcement": "ヒューストン、我々は問題を抱えています",
+    "reload": "再読み込み"
+  },
+  "videoCall": {
+    "loading": {
+      "initial": "ビデオ通話を読み込み中...",
+      "reloading": "ビデオ通話を再読み込み中...",
+      "description": "ビデオ通話に接続中です。しばらくお待ちください"
+    },
+    "error": {
+      "title": "ビデオ通話の読み込みに失敗しました",
+      "announcement": "ヒューストン、問題が発生しました",
+      "timeout": "タイムアウト - ビデオ通話が15秒以内に読み込めませんでした",
+      "crashed": "Webviewがクラッシュしました",
+      "maxRetriesReached": "複数回の試行後も読み込みに失敗しました",
+      "reload": "ビデオ通話を再読み込み"
+    }
+  },
+  "sidebar": {
+    "addNewServer": "新しいサーバーを追加",
+    "settings": "アプリの設定",
+    "item": {
+      "reload": "サーバーを再読み込み",
+      "remove": "サーバーを削除",
+      "openDevTools": "開発ツールを開く"
+    }
+  },
+  "touchBar": {
+    "formatting": "書式",
+    "selectServer": "サーバーを選択"
+  },
+  "tray": {
+    "menu": {
+      "show": "表示",
+      "hide": "隠す",
+      "quit": "終了"
+    },
+    "tooltip": {
+      "noUnreadMessage": "{{- appName}}: 未読のメッセージはありません",
+      "unreadMention": "{{- appName}}: 未読のメンション/ダイレクトメッセージがあります",
+      "unreadMention_plural": "{{- appName}}: 未読のメンション/ダイレクトメッセージが {{- count}} 件あります",
+      "unreadMessage": "{{- appName}}: 未読のメッセージがあります"
+    }
+  },
+  "taskbar": {
+    "unreadMessage": "未読メッセージ",
+    "unreadMention": "未読メンション",
+    "noUnreadMessage": "未読メッセージはありません"
+  },
+  "screenSharing": {
+    "permissionDenied": "画面収録権限が拒否されました",
+    "permissionRequired": "画面を共有するには画面収録権限が必要です。",
+    "permissionInstructions": "システム環境設定で有効にして、もう一度お試しください。",
+    "title": "画面を共有する",
+    "entireScreen": "画面全体",
+    "applicationWindow": "アプリケーションウィンドウ",
+    "noScreensFound": "画面が見つかりません",
+    "noWindowsFound": "ウィンドウが見つかりません",
+    "cancel": "キャンセル",
+    "share": "共有"
+  },
+  "serverInfo": {
+    "title": "サーバー情報",
+    "urlLabel": "URL:",
+    "versionLabel": "バージョン:",
+    "unknown": "不明",
+    "exchangeUrlLabel": "Outlook Exchange URL:",
+    "supportedVersionsTitle": "サポートされているバージョン",
+    "statusLabel": "ステータス:",
+    "status": {
+      "loading": "読み込み中...",
+      "error": "読み込みに失敗しました",
+      "loaded": "読み込み済み",
+      "idle": "アイドル",
+      "from": "{{source}}から"
+    },
+    "supported": {
+      "unknown": "不明",
+      "expiring": "期限切れ間近",
+      "yes": "はい",
+      "no": "いいえ"
+    },
+    "expiration": {
+      "label": "有効期限:",
+      "expiresOn": "{{date}}に期限切れ"
+    }
+  }
+}

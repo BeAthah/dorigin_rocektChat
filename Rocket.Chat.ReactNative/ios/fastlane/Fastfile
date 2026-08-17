@@ -1,0 +1,140 @@
+# Customize this file, documentation can be found here:
+# https://docs.fastlane.tools/actions/
+# All available actions: https://docs.fastlane.tools/actions
+# can also be listed using the `fastlane actions` command
+
+# Change the syntax highlighting to Ruby
+# All lines starting with a # are ignored when running `fastlane`
+
+# If you want to automatically update fastlane if a new version is available:
+# update_fastlane
+
+# This is the minimum version number required.
+# Update this, if you use features of a newer version
+fastlane_version "2.63.0"
+
+default_platform :ios
+
+platform :ios do
+  before_all do
+    setup_ci
+    create_keychain(
+      name: ENV["MATCH_KEYCHAIN_NAME"],
+      password: ENV["MATCH_KEYCHAIN_PASSWORD"],
+      timeout: 0,
+      lock_when_sleeps: false,
+      unlock: true
+    )
+  end
+
+  desc "Submit a new Beta Build to Apple TestFlight"
+  lane :beta do
+    changelog_path = File.expand_path('../../changelog.txt', __dir__)
+
+    changelog = if File.exist?(changelog_path)
+        content = File.read(changelog_path)
+        content.length > 4000 ? content[0, 3997] + "..." : content
+    end
+
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"],
+      key_filepath: 'fastlane/app_store_connect_api_key.p8',
+      in_house: false
+    )
+
+    pilot_options = {
+        ipa: 'Rocket.Chat.ipa',
+        app_identifier: 'chat.rocket.ios',
+        skip_waiting_for_build_processing: !changelog,
+        reject_build_waiting_for_review: true,
+    }
+
+    if changelog
+        pilot_options[:changelog] = changelog
+    end
+
+    if ENV["TRIGGER"] == "develop"
+        pilot_options[:distribute_external] = true
+        pilot_options[:notify_external_testers] = true
+        pilot_options[:groups] = ["External Testers"]
+    end
+
+    pilot(pilot_options)
+    upload_symbols_to_crashlytics(dsym_path: "Rocket.Chat.app.dSYM.zip")
+    upload_symbols_to_bugsnag(
+      config_file: "RocketChatRN/Info.plist",
+      dsym_path: "Rocket.Chat.app.dSYM.zip",
+      api_key: ENV["BUGSNAG_KEY_OFFICIAL"]
+    )
+  end
+
+  desc "Build app"
+  lane :build do
+    match(
+      type: "appstore",
+      platform: "ios",
+      app_identifier: ["chat.rocket.ios", "chat.rocket.ios.NotificationService", "chat.rocket.ios.Rocket-Chat-ShareExtension", "chat.rocket.ios.watchkitapp"],
+      readonly: true,
+      output_path: './'
+    )
+
+    # Allow codesign to access keys without prompting
+    keychain_path = "~/Library/Keychains/#{ENV['MATCH_KEYCHAIN_NAME']}-db"
+    sh "security unlock-keychain -p \"#{ENV['MATCH_KEYCHAIN_PASSWORD']}\" #{keychain_path}"
+    sh "security set-keychain-settings -lut 3600 #{keychain_path}"
+    sh "security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k \"#{ENV['MATCH_KEYCHAIN_PASSWORD']}\" #{keychain_path} || true"
+
+    update_code_signing_settings(
+      profile_name: "match AppStore chat.rocket.ios.NotificationService",
+      build_configurations: "Release",
+      code_sign_identity: "iPhone Distribution",
+      targets: "NotificationService",
+    )
+
+    update_code_signing_settings(
+      profile_name: "match AppStore chat.rocket.ios.Rocket-Chat-ShareExtension",
+      build_configurations: "Release",
+      code_sign_identity: "iPhone Distribution",
+      targets: "ShareRocketChatRN",
+    )
+
+    update_code_signing_settings(
+      profile_name: "match AppStore chat.rocket.ios.watchkitapp",
+      build_configurations: "Release",
+      code_sign_identity: "iPhone Distribution",
+      targets: "Rocket.Chat.Watch",
+    )
+
+    gym(
+      scheme: "RocketChat",
+      workspace: "RocketChat.xcworkspace",
+      xcargs: "-allowProvisioningUpdates",
+      output_name: "Rocket.Chat"
+    )
+  end
+
+  desc "Build app for Simulator"
+  lane :build_simulator do
+    gym(
+      scheme: "RocketChat",
+      workspace: "RocketChat.xcworkspace",
+      destination: "generic/platform=iOS Simulator",
+      skip_package_ipa: true,
+      output_name: "Rocket.Chat",
+      output_directory: "./fastlane/output",
+      build_path: "./fastlane/build",
+      configuration: "Release",
+      derived_data_path: "./fastlane/derived_data",
+      xcargs: "-parallelizeTargets -jobs 4 ARCHS=arm64"
+    )
+  end
+
+  after_all do |lane|
+    delete_keychain(name: ENV["MATCH_KEYCHAIN_NAME"])
+  end
+
+  error do |lane, exception|
+    delete_keychain(name: ENV["MATCH_KEYCHAIN_NAME"])
+  end
+end

@@ -1,0 +1,116 @@
+import { session, webContents } from 'electron';
+
+import { handle } from '../ipc/main';
+import { SERVER_DOCUMENT_VIEWER_OPEN_URL } from '../servers/actions';
+import { dispatch, listen, select } from '../store';
+import { WEBVIEW_PDF_VIEWER_ATTACHED } from '../ui/actions';
+import { openExternal } from '../utils/browserLauncher';
+
+export const startDocumentViewerHandler = (): void => {
+  handle(
+    'document-viewer/open-window',
+    async (event, url, format, _options) => {
+      const validUrl = new URL(url);
+      const allowedProtocols = ['http:', 'https:', 'blob:'];
+      if (!allowedProtocols.includes(validUrl.protocol)) {
+        return;
+      }
+
+      const eventOrigin = new URL(event.getURL()).origin;
+
+      if (validUrl.protocol === 'blob:') {
+        if (validUrl.origin === 'null' || validUrl.origin !== eventOrigin) {
+          return;
+        }
+      }
+
+      const server = select(({ servers }) =>
+        servers.find((s) => new URL(s.url).origin === eventOrigin)
+      );
+      if (!server) {
+        return;
+      }
+
+      dispatch({
+        type: SERVER_DOCUMENT_VIEWER_OPEN_URL,
+        payload: {
+          server: server.url,
+          documentUrl: url,
+          documentFormat: format,
+        },
+      });
+    }
+  );
+
+  handle(
+    'document-viewer/fetch-content',
+    async (_event, url: string, serverUrl: string) => {
+      const parsedUrl = new URL(url);
+      const parsedServerUrl = new URL(serverUrl);
+      const allowedProtocols = ['http:', 'https:'];
+
+      if (!allowedProtocols.includes(parsedUrl.protocol)) {
+        throw new Error('Invalid URL protocol');
+      }
+
+      if (parsedUrl.origin !== parsedServerUrl.origin) {
+        throw new Error('URL origin does not match server');
+      }
+
+      const partition = `persist:${serverUrl}`;
+      const ses = session.fromPartition(partition);
+      const response = await ses.fetch(url);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch: ${response.status}`);
+      }
+      return response.text();
+    }
+  );
+
+  listen(WEBVIEW_PDF_VIEWER_ATTACHED, async (action) => {
+    const webContentsId = action.payload.WebContentsId;
+    const webContent = webContents.fromId(webContentsId);
+    if (!webContent) {
+      return;
+    }
+    webContent.on('will-navigate', (event, url) => {
+      // Only prevent navigation for PDF viewer webviews, not video call windows
+      // Check if this is actually a PDF viewer by examining the context
+      const currentUrl = webContent.getURL();
+
+      // Skip handling if this is a video call window or not a PDF viewer context
+      if (
+        currentUrl.includes('video-call-window.html') ||
+        currentUrl.includes('app/video-call-window.html')
+      ) {
+        return;
+      }
+
+      // Also check if the navigation URL is an external protocol (like zoommtg://)
+      // that should be handled by the system, not intercepted
+      try {
+        const navUrl = new URL(url);
+        const isExternalProtocol = ![
+          'http:',
+          'https:',
+          'file:',
+          'data:',
+          'about:',
+        ].includes(navUrl.protocol);
+
+        // If it's an external protocol, let the system handle it normally
+        if (isExternalProtocol) {
+          return;
+        }
+      } catch (e) {
+        // If URL parsing fails, let the default handling proceed
+        return;
+      }
+
+      event.preventDefault();
+      setTimeout(() => {
+        openExternal(url);
+      }, 10);
+    });
+  });
+};

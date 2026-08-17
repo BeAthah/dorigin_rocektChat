@@ -1,0 +1,9 @@
+/data/
+node_modules
+.env
+override-*
+override.*
+
+mongodb_vol/
+
+gists/

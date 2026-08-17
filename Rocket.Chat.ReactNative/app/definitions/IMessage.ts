@@ -1,0 +1,280 @@
+import type Model from '@nozbe/watermelondb/Model';
+import { type Root } from '@rocket.chat/message-parser';
+
+import { type MessageTypeLoad } from '../lib/constants/messageTypeLoad';
+import { type IAttachment } from './IAttachment';
+import { type IReaction } from './IReaction';
+import { type TThreadMessageModel } from './IThreadMessage';
+import { type TThreadModel } from './IThread';
+import { type IUrl, type IUrlFromServer } from './IUrl';
+
+export type TMessageAction = 'quote' | 'edit' | 'react' | null;
+
+export type MessageType =
+	| 'jitsi_call_started'
+	| 'discussion-created'
+	| 'e2e'
+	| 'load_more'
+	| 'rm'
+	| 'uj'
+	| MessageTypeLoad
+	| MessageTypesValues;
+
+export interface IUserMessage {
+	_id: string;
+	username?: string;
+	name?: string;
+}
+
+export interface IUserMention extends IUserMessage {
+	type: string;
+}
+
+export interface IUserChannel {
+	[index: number]: string | number;
+	name: string;
+	_id: string;
+}
+
+export interface IEditedBy {
+	_id: string;
+	username: string;
+}
+
+export type TOnLinkPress = (link: string) => void;
+
+export interface IMessageTranslations {
+	_id: string;
+	language: string;
+	value: string;
+}
+
+export type E2EType = 'pending' | 'done';
+
+export interface ILastMessage {
+	_id?: string;
+	rid?: string;
+	tshow?: boolean;
+	t?: MessageType;
+	tmid?: string;
+	msg?: string;
+	e2e?: E2EType;
+	ts?: string | Date;
+	u: IUserMessage;
+	_updatedAt?: string | Date;
+	urls?: IUrlFromServer[];
+	mentions?: IUserMention[];
+	channels?: IUserChannel[];
+	md?: Root;
+	attachments?: IAttachment[];
+	reactions?: IReaction[];
+	unread?: boolean;
+	pinned?: boolean;
+	status?: number;
+	token?: string;
+}
+
+interface IMessageFile {
+	_id: string;
+	name: string;
+	type: string;
+}
+
+interface IEncryptedContent {
+	/**
+	 * The encryption algorithm used.
+	 * Currently supported algorithms are:
+	 * - `rc.v1.aes-sha2`: Rocket.Chat E2E Encryption version 1, using AES encryption with SHA-256 hashing.
+	 * - `rc.v2.aes-sha2`: Rocket.Chat E2E Encryption version 2, using AES encryption with SHA-256 hashing and improved key management.
+	 */
+	algorithm: string;
+	ciphertext: string; // base64-encoded encrypted subset JSON of IMessage
+}
+
+interface IEncryptedContentV1 extends IEncryptedContent {
+	/**
+	 * The encryption algorithm used.
+	 */
+	algorithm: 'rc.v1.aes-sha2';
+}
+
+interface IEncryptedContentV2 extends IEncryptedContent {
+	algorithm: 'rc.v2.aes-sha2';
+	iv: string; // base64-encoded initialization vector
+	kid: string; // ID of the key used to encrypt the message
+}
+
+export type EncryptedContent = IEncryptedContentV1 | IEncryptedContentV2;
+
+export interface IMessageFromServer {
+	_id: string;
+	rid: string;
+	msg?: string;
+	ts: string | Date; // wm date issue
+	u: IUserMessage;
+	_updatedAt: string | Date;
+	urls?: IUrl[];
+	mentions?: IUserMention[];
+	channels?: IUserChannel[];
+	md?: Root;
+	file?: IMessageFile;
+	files?: IMessageFile[];
+	groupable?: boolean;
+	attachments?: IAttachment[];
+	t?: MessageType;
+	drid?: string;
+	dcount?: number;
+	dml: string | Date;
+	starred?: boolean;
+	pinned?: boolean;
+	pinnedAt?: string | Date;
+	pinnedBy?: {
+		_id: string;
+		username: string;
+	};
+	score?: number;
+	content?: EncryptedContent;
+}
+
+export interface ILoadMoreMessage {
+	_id: string;
+	rid: string;
+	ts: string;
+	t: string;
+	msg: string;
+}
+
+export interface IMessage extends IMessageFromServer {
+	id: string;
+	t: MessageType;
+	alias?: string;
+	parseUrls?: boolean;
+	avatar?: string;
+	emoji?: string;
+	status?: number;
+	pinned?: boolean;
+	editedBy?: IEditedBy;
+	reactions?: IReaction[];
+	role?: string;
+	drid?: string;
+	dcount?: number;
+	dlm?: string | Date;
+	tmid?: string;
+	tcount?: number | null;
+	tlm?: string | Date | null;
+	replies?: string[];
+	unread?: boolean;
+	autoTranslate?: boolean;
+	translations?: IMessageTranslations[];
+	tmsg?: string;
+	blocks?: any;
+	e2e?: E2EType;
+	tshow?: boolean;
+	comment?: string;
+	subscription?: { id: string };
+	user?: string;
+	editedAt?: string | Date;
+	e2eMentions?: any;
+}
+
+export type TMessageModel = IMessage &
+	Model & {
+		asPlain: () => IMessage;
+	};
+
+export type TAnyMessageModel = TMessageModel | TThreadModel | TThreadMessageModel;
+export type TTypeMessages = IMessageFromServer | ILoadMoreMessage | IMessage;
+
+// Read receipts to ReadReceiptView and chat.getMessageReadReceipts
+export interface IReadReceipts {
+	_id: string;
+	roomId: string;
+	userId: string;
+	messageId: string;
+	ts: string;
+	user?: IUserMessage;
+}
+
+// from Rocket.Chat codebase
+type VoipMessageTypesValues =
+	| 'voip-call-started'
+	| 'voip-call-declined'
+	| 'voip-call-on-hold'
+	| 'voip-call-unhold'
+	| 'voip-call-ended'
+	| 'voip-call-duration'
+	| 'voip-call-wrapup'
+	| 'voip-call-ended-unexpectedly';
+
+type TeamMessageTypes =
+	| 'removed-user-from-team'
+	| 'added-user-to-team'
+	| 'ult'
+	| 'user-converted-to-team'
+	| 'user-converted-to-channel'
+	| 'user-removed-room-from-team'
+	| 'user-deleted-room-from-team'
+	| 'user-added-room-to-team'
+	| 'ujt';
+
+type LivechatMessageTypes =
+	| 'livechat_navigation_history'
+	| 'livechat_transfer_history'
+	| 'livechat_transcript_history'
+	| 'livechat_video_call'
+	| 'livechat_webrtc_video_call'
+	| 'livechat-started';
+
+type OmnichannelTypesValues =
+	| 'livechat_transfer_history_fallback'
+	| 'livechat-close'
+	| 'omnichannel_placed_chat_on_hold'
+	| 'omnichannel_on_hold_chat_resumed';
+
+type OtrMessageTypeValues = 'otr' | 'otr-ack';
+type OtrSystemMessages = 'user_joined_otr' | 'user_requested_otr_key_refresh' | 'user_key_refreshed_successfully';
+
+export type MessageTypesValues =
+	| 'e2e'
+	| 'uj'
+	| 'ul'
+	| 'ru'
+	| 'au'
+	| 'mute_unmute'
+	| 'r'
+	| 'ut'
+	| 'wm'
+	| 'rm'
+	| 'subscription-role-added'
+	| 'subscription-role-removed'
+	| 'room-archived'
+	| 'room-unarchived'
+	| 'room_changed_privacy'
+	| 'room_changed_description'
+	| 'room_changed_announcement'
+	| 'room_changed_avatar'
+	| 'room_changed_topic'
+	| 'room_e2e_enabled'
+	| 'room_e2e_disabled'
+	| 'user-muted'
+	| 'user-unmuted'
+	| 'room-removed-read-only'
+	| 'room-set-read-only'
+	| 'room-allowed-reacting'
+	| 'room-disallowed-reacting'
+	| 'command'
+	| 'videoconf'
+	| LivechatMessageTypes
+	| TeamMessageTypes
+	| VoipMessageTypesValues
+	| OmnichannelTypesValues
+	| OtrMessageTypeValues
+	| OtrSystemMessages
+	| 'message_pinned'
+	| 'message_snippeted'
+	| 'jitsi_call_started'
+	| 'abac-removed-user-from-room';
+
+export interface IAttachmentTranslations {
+	[k: string]: string;
+}

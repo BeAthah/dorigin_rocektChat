@@ -1,0 +1,752 @@
+{
+  "contextMenu": {
+    "cut": "Cu&t",
+    "copy": "&Copy",
+    "paste": "&Paste",
+    "selectAll": "Select &all",
+    "undo": "&Undo",
+    "redo": "&Redo",
+    "spelling": "Spelling",
+    "spellingLanguages": "Spelling languages",
+    "moreSpellingSuggestions": "More spelling suggestions",
+    "noSpellingSuggestions": "No suggestions",
+    "copyLinkAddress": "Copy link address",
+    "copyLinkText": "Copy link text",
+    "openLink": "Open link",
+    "saveImageAs": "Save image as...",
+    "copyImage": "Copy image"
+  },
+  "dialog": {
+    "about": {
+      "title": "About {{- appName}}",
+      "version": "Version: <1>{{-version}}</1>",
+      "checkUpdates": "Check for Updates",
+      "checkUpdatesOnStart": "Check for Updates on Start",
+      "noUpdatesAvailable": "No updates are available.",
+      "copyright": "Copyright {{copyright}}",
+      "errorWhenLookingForUpdates": "An error has occurred when looking for updates",
+      "updateChannel": {
+        "label": "Update Channel",
+        "latest": "Stable",
+        "beta": "Beta",
+        "alpha": "Alpha (Experimental)"
+      }
+    },
+    "addServer": {
+      "title": "Add Server",
+      "message": "Do you want to add \"{{- host}}\" to your list of servers?",
+      "add": "Add",
+      "cancel": "Cancel"
+    },
+    "addServerError": {
+      "title": "Invalid Host",
+      "message": "The host \"{{- host}}\" could not be validated, so was not added."
+    },
+    "certificateError": {
+      "title": "Certificate error",
+      "message": "Do you trust certificate from \"{{- issuerName}}\"? Only click 'Yes' if you really trust this certificate. If you are unsure, contact your IT or security team before clicking on 'Yes'.",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "clearCache": {
+      "announcement": "Force reload",
+      "title": "Keep your login session?",
+      "message": "By deleting your login session you will be logged out and asked to inform your credentials again.",
+      "keepLoginData": "Keep login session",
+      "deleteLoginData": "Delete login session",
+      "clearingWait": "Please wait",
+      "cancel": "Cancel"
+    },
+    "downloadRemoval": {
+      "title": "Are you sure?",
+      "message": "Remove this download?",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "resetAppData": {
+      "title": "Reset app data",
+      "message": "This will sign you out from all your teams and reset the app back to its original settings. This cannot be undone.",
+      "yes": "Yes",
+      "cancel": "Cancel"
+    },
+    "clearPermittedScreenCaptureServers": {
+      "title": "Clear Permitted Screen Capture Servers",
+      "message": "This will clear all the permissions for screen capture servers, making them ask again for permission. This cannot be undone.",
+      "yes": "Yes",
+      "cancel": "Cancel"
+    },
+    "screenshare": {
+      "title": "Share Your Screen",
+      "announcement": "Select a screen to share"
+    },
+    "update": {
+      "title": "Update Available",
+      "announcement": "New Update is Available",
+      "message": "A new version of the Rocket.Chat Desktop App is available!",
+      "currentVersion": "Current Version:",
+      "newVersion": "New Version:",
+      "install": "Install Update",
+      "remindLater": "Remind Me Later",
+      "skip": "Skip This Version"
+    },
+    "updateDownloading": {
+      "title": "Downloading Update",
+      "message": "You will be notified when the update is ready to be installed",
+      "ok": "OK"
+    },
+    "updateInstallLater": {
+      "title": "Installing Later",
+      "message": "Update will be installed when you exit the app",
+      "ok": "OK"
+    },
+    "updateReady": {
+      "title": "Update Ready to Install",
+      "message": "Update has been downloaded",
+      "installNow": "Install Now",
+      "installLater": "Install Later"
+    },
+    "updateSkip": {
+      "title": "Skip Update",
+      "message": "We will notify you when the next update is available\nIf you change your mind you can check for updates from the About menu.",
+      "ok": "OK"
+    },
+    "selectClientCertificate": {
+      "announcement": "Select Certificate",
+      "select": "Select",
+      "validDates": "Valid from {{-validStart,}} to {{-validExpiry,}}"
+    },
+    "openingExternalProtocol": {
+      "title": "Link with custom protocol",
+      "message": "{{- protocol }} link requires an external application.",
+      "detail": "The requested link is {{- url }} . Do you want to continue?",
+      "dontAskAgain": "Always open these types of links in the associated app",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "allowVideoCallCaptureScreen": {
+      "title": "The video call is trying to capture your screen",
+      "message": "The video call is requesting permission to capture your screen.",
+      "detail": "The video call from the server {{- url }} requires permission in order to share your screen with others.",
+      "dontAskAgain": "Always allow video calls from this server to capture your screen",
+      "yes": "Allow",
+      "no": "Cancel"
+    },
+    "mediaPermission": {
+      "title": "Media Permission Required",
+      "message": "{{- permissionType}} access is currently disabled in your system settings.",
+      "detail": "To enable video calling features, please allow access in your system's privacy settings and then restart the application.",
+      "openSettings": "Open Settings",
+      "cancel": "Cancel",
+      "microphone": "Microphone",
+      "camera": "Camera",
+      "both": "Microphone and Camera"
+    },
+    "microphonePermissionDenied": {
+      "title": "Microphone Access Required",
+      "message": "Microphone access is required to {{- actionType}}. Please check your system settings.",
+      "detail": "You can enable microphone access in your system's privacy settings.",
+      "openSettings": "Open Settings",
+      "cancel": "Cancel",
+      "actionTypes": {
+        "initiateCall": "make calls",
+        "answerCall": "answer calls",
+        "recordMessage": "record messages"
+      }
+    },
+    "outlookCalendar": {
+      "title": "Outlook Calendar",
+      "encryptionUnavailableTitle": "Encryption unavailable",
+      "encryptionUnavailable": "Your operational system don't support encryption.\nYour credentials will be stored in plain text.",
+      "field_required": "This field is required",
+      "remember_credentials": "Remember my credentials",
+      "cancel": " Cancel",
+      "submit": "Login"
+    },
+    "supportedVersion": {
+      "title": "Workspace version unsupported"
+    },
+    "telephonySelectServer": {
+      "title": "Choose a workspace for this call",
+      "message": "Which workspace should take this call?",
+      "rememberChoice": "Remember for future calls"
+    },
+    "clearLogs": {
+      "title": "Clear Logs",
+      "message": "Are you sure you want to clear the log file?",
+      "detail": "This action cannot be undone. All current log entries will be permanently deleted.",
+      "yes": "Clear",
+      "cancel": "Cancel"
+    }
+  },
+  "documentViewer": {
+    "title": {
+      "pdf": "PDF Viewer",
+      "markdown": "Markdown Viewer"
+    },
+    "back": "Back"
+  },
+  "downloads": {
+    "title": "Downloads",
+    "notifications": {
+      "downloadFinished": "Download Finished",
+      "downloadInterrupted": "Download Interrupted",
+      "downloadCancelled": "Download Cancelled",
+      "downloadFailed": "Download Failed",
+      "downloadExpired": "Downlaod Expired",
+      "downloadExpiredMessage": "Please retry downloading from source."
+    },
+    "filters": {
+      "search": "Search",
+      "server": "Server",
+      "mimeType": "Type",
+      "status": "Status",
+      "clear": "Clear filters",
+      "all": "All",
+      "mimes": {
+        "images": "Images",
+        "videos": "Videos",
+        "audios": "Audios",
+        "texts": "Texts",
+        "files": "Files"
+      },
+      "statuses": {
+        "paused": "Paused",
+        "cancelled": "Cancelled"
+      }
+    },
+    "item": {
+      "cancel": "Cancel",
+      "copyLink": "Copy link",
+      "errored": "Download cancelled",
+      "pause": "Pause",
+      "progressSize": "{{receivedBytes, byteSize}} of {{totalBytes, byteSize}} ({{ratio, percentage}})",
+      "remove": "Remove from list",
+      "resume": "Resume",
+      "retry": "Retry",
+      "showInFolder": "Show in Folder"
+    },
+    "showingResults": "Showing results {{first}} - {{last}} of {{count}}",
+    "empty": {
+      "title": "No downloads yet",
+      "subtitle": "Files you download will appear here."
+    },
+    "noResults": {
+      "title": "No matching downloads",
+      "subtitle": "Try adjusting your filters or search."
+    }
+  },
+  "certificatesManager": {
+    "title": "Certificates manager",
+    "trustedCertificates": "Trusted certificates",
+    "notTrustedCertificates": "Not trusted certificates",
+    "item": {
+      "domain": "Domain",
+      "actions": "Actions",
+      "remove": "Remove"
+    }
+  },
+  "settings": {
+    "title": "App settings",
+    "general": "General",
+    "certificates": "Certificates",
+    "developer": "Developer",
+    "voiceVideo": "Voice & Video",
+    "sections": {
+      "appUi": "App UI",
+      "systemUi": "System UI",
+      "systemBehavior": "System behavior",
+      "calling": "Calling",
+      "other": "Other & technical",
+      "logging": "Logging",
+      "telephony": "Telephony",
+      "videoCalls": "Video calls"
+    },
+    "options": {
+      "report": {
+        "title": "Report errors to Rocket.Chat",
+        "description": "Anonymously report issues to app developers. Shared information includes app version number, operating system type, workspace URL, device language and error type. No content or usernames are shared.",
+        "masDescription": "This option is disabled when installed from the Mac App Store. Errors are reported through the Mac App Store error report process."
+      },
+      "flashFrame": {
+        "title": "Flash frame",
+        "titleDarwin": "Bounce dock icon",
+        "description": "Flash window when a new message is received.",
+        "onLinux": "Some Linux distros don't have support for this feature.",
+        "descriptionDarwin": "Dock icon bounces when a new message is received."
+      },
+      "hardwareAcceleration": {
+        "title": "Hardware acceleration",
+        "description": "Improves visual rendering and performance. Disable if you experience visual glitches or instability.",
+        "hint": "Reloads app on change."
+      },
+      "videoCallScreenCaptureFallback": {
+        "title": "Video call screen capture fallback",
+        "description": "Disable Windows Graphics Capture so screen sharing works in Remote Desktop sessions.",
+        "hint": "App restarts when this option is changed.",
+        "forcedDescription": "Currently enforced because the app detected a Remote Desktop session. Toggle now controls future launches when running locally."
+      },
+      "internalVideoChatWindow": {
+        "title": "Video calls inside app",
+        "description": "Open video calls inside app window instead of browser. Google Meet and Jitsi calls can only open in browser.",
+        "masDescription": "This option is disabled when installed from the Mac App Store. For security reasons, video calls always open in the browser by default."
+      },
+      "minimizeOnClose": {
+        "title": "Minimize on close",
+        "description": "Minimize and do not quit app when closing.",
+        "disabledHint": "Tray icon must be disabled."
+      },
+      "menubar": {
+        "title": "Menu bar",
+        "description": "Show menu bar on the top of the window.",
+        "disabledHint": "Cannot disable menu bar when the workspace bar is disabled. App settings would become inaccessible."
+      },
+      "sidebar": {
+        "title": "Workspace bar",
+        "description": "Show workspace list with downloads and settings buttons.",
+        "disabledHint": "Cannot disable workspace bar when the menu bar is disabled. App settings would become inaccessible."
+      },
+      "trayIcon": {
+        "title": "Tray icon",
+        "titleDarwin": "Menu bar extra",
+        "description": "Show tray icon on system tray. Instead of quitting, app is hidden to tray on close when enabled.",
+        "descriptionDarwin": "Show app icon in menu bar."
+      },
+      "availableBrowsers": {
+        "title": "Default browser",
+        "description": "Choose which browser to open external links in.",
+        "systemDefault": "System default",
+        "loading": "Loading browsers...",
+        "current": "Currently using:"
+      },
+      "telephony": {
+        "title": "Telephony",
+        "description": "Let Rocket.Chat handle phone-call shortcuts and tel: or callto: links. Turn off to disable the shortcut, ignore phone-link clicks, and hide the settings below."
+      },
+      "telephonyServer": {
+        "title": "Telephony workspace",
+        "description": "Choose which workspace handles incoming phone calls (tel: and callto: links).",
+        "auto": "Auto (ask each time)"
+      },
+      "telephonyShortcut": {
+        "title": "Global call shortcut",
+        "description": "Press this shortcut from any app to bring Rocket.Chat to the front and open the dial pad. If a phone number is on your clipboard, it gets pre-filled.",
+        "placeholder": "Not set — click Save to record",
+        "capturePlaceholder": "Press shortcut keys…",
+        "save": "Save",
+        "clear": "Clear",
+        "registered": "Shortcut registered",
+        "reservedByApp": "{{accelerator}} is already used by Rocket.Chat. Pick a different combination.",
+        "reservedByOS": "{{accelerator}} is reserved by your operating system. Pick a different combination."
+      },
+      "clearPermittedScreenCaptureServers": {
+        "title": "Clear screen capture permissions",
+        "description": "Clear permissions even if “do not ask again” was previously selected for calling."
+      },
+      "allowScreenCaptureOnVideoCalls": {
+        "title": "Allow screen capture on video calls",
+        "description": "Allow screen capture on video calls. Asks for permission on each video call."
+      },
+      "ntlmCredentials": {
+        "title": "NTLM credentials",
+        "description": "Allow NTLM credentials to be used when connecting to a workspace.",
+        "domains": "Domains that will be used as the credentials. Separated by comma. Use * for match all servers."
+      },
+      "videoCallWindowPersistence": {
+        "title": "Retain video call window position",
+        "description": "Remember position and size of video call window between sessions."
+      },
+      "transparentWindow": {
+        "title": "Transparent window effect",
+        "description": "Enable native vibrancy on app window.",
+        "hint": "Requires app restart."
+      },
+      "themeAppearance": {
+        "title": "Theme",
+        "description": "App color theme.",
+        "auto": "Match system",
+        "light": "Light",
+        "dark": "Dark"
+      },
+      "outlookCalendarSyncInterval": {
+        "title": "Outlook Calendar sync interval",
+        "description": "Frequency of calendar events update checks in minutes (1–60)."
+      },
+      "verboseOutlookLogging": {
+        "title": "Verbose Outlook Calendar logging",
+        "description": "Enable detailed Exchange/NTLM debug logs for troubleshooting Outlook Calendar integration issues."
+      },
+      "detailedEventsLogging": {
+        "title": "Detailed events logging",
+        "description": "Log full event data exchanged between Outlook and Rocket.Chat during calendar sync. Useful for diagnosing sync issues."
+      },
+      "debugLogging": {
+        "title": "Verbose logging",
+        "description": "Writes all console output to the log file. When disabled, only errors and important messages are saved, keeping logs smaller and focused."
+      },
+      "e2ePdfPreviewSizeLimit": {
+        "title": "PDF preview size limit in encrypted rooms (MB)",
+        "description": "Encrypted files are loaded into memory for previews. Files larger than this limit will be downloaded directly."
+      }
+    }
+  },
+  "error": {
+    "authNeeded": "Auth needed, try <strong>{{- auth}}</strong>",
+    "connectTimeout": "Timeout trying to connect",
+    "differentCertificate": "Certificate is different from previous one.\n\n {{- detail}}",
+    "noValidServerFound": "No valid server found at the URL",
+    "offline": "Check your Internet connection!"
+  },
+  "landing": {
+    "invalidUrl": "Invalid url",
+    "validating": "Validating...",
+    "inputUrl": "Enter your server URL",
+    "connect": "Connect"
+  },
+  "menus": {
+    "about": "About {{- appName}}",
+    "addNewServer": "Add &new server",
+    "back": "&Back",
+    "clearTrustedCertificates": "Clear trusted certificates",
+    "close": "Close",
+    "copy": "&Copy",
+    "cut": "Cu&t",
+    "developerMode": "Developer Mode",
+    "disableGpu": "Disable GPU",
+    "documentation": "Documentation",
+    "downloads": "Downloads",
+    "settings": "App settings",
+    "editMenu": "&Edit",
+    "fileMenu": "&File",
+    "forward": "&Forward",
+    "helpMenu": "&Help",
+    "hide": "Hide {{- appName}}",
+    "hideOthers": "Hide Others",
+    "learnMore": "Learn more",
+    "minimize": "Minimize",
+    "openDevTools": "Open &DevTools",
+    "openDevToolsOnAllWindows": "Open &DevTools on all windows",
+    "paste": "&Paste",
+    "quit": "&Quit {{- appName}}",
+    "redo": "&Redo",
+    "reload": "&Reload",
+    "reloadClearingCache": "Force reload",
+    "reportIssue": "Report issue",
+    "resetAppData": "Reset app data",
+    "resetZoom": "Reset zoom",
+    "selectAll": "Select &all",
+    "services": "Services",
+    "showFullScreen": "Full screen",
+    "showMenuBar": "Menu bar",
+    "showOnUnreadMessage": "Show on unread messages",
+    "showServerList": "Server list",
+    "showTrayIcon": "Tray icon",
+    "toggleDevTools": "Toggle &DevTools",
+    "openConfigFolder": "Open &Configuration Folder",
+    "openLogViewer": "Open &Log Viewer",
+    "videoCallDevTools": "Open Video Call &DevTools",
+    "videoCallTools": "Video Call Tools",
+    "videoCallDevToolsAutoOpen": "Auto-open DevTools",
+    "undo": "&Undo",
+    "unhide": "Show All",
+    "viewMenu": "&View",
+    "windowMenu": "&Window",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out"
+  },
+  "loadingError": {
+    "title": "Server Failed to Load",
+    "announcement": "Houston, we have a problem",
+    "reload": "Reload"
+  },
+  "videoCall": {
+    "loading": {
+      "initial": "Loading video call...",
+      "reloading": "Reloading video call...",
+      "description": "Please wait while we connect to the video call"
+    },
+    "error": {
+      "title": "Video Call Failed to Load",
+      "announcement": "Houston, we have a problem",
+      "timeout": "Loading timeout - video call failed to load within 15 seconds",
+      "crashed": "Webview crashed",
+      "maxRetriesReached": "Failed to load after multiple attempts",
+      "reload": "Reload Video Call"
+    }
+  },
+  "unsupportedServer": {
+    "title": "{{instanceDomain}} is running an unsupported version of Rocket.Chat",
+    "announcement": "An admin needs to update the workspace to a supported version in order to reenable access from mobile and desktop apps.",
+    "moreInformation": "Learn more"
+  },
+  "selfxss": {
+    "title": "Stop!",
+    "description": "This is a browser feature intended for developers. If someone told you to copy-paste something here to enable a Rocket.Chat feature or \"hack\" someone's account, it is a scam and will give them access to your Rocket.Chat account.",
+    "moreInfo": "See https://go.rocket.chat/i/xss for more information."
+  },
+  "sidebar": {
+    "addNewServer": "Add new server",
+    "downloads": "Downloads",
+    "settings": "App settings",
+    "menuTitle": "Customize and control app",
+    "item": {
+      "reload": "Reload",
+      "remove": "Remove",
+      "openDevTools": "Open DevTools",
+      "clearCache": "Clear Cache",
+      "clearStorageData": "Clear Storage Data",
+      "copyCurrentUrl": "Copy current URL",
+      "reloadClearingCache": "Force reload",
+      "serverInfo": "Server Info",
+      "supportedVersionsInfo": "Supported Versions Info"
+    },
+    "tooltips": {
+      "unreadMessage": "{{- count}} unread message",
+      "unreadMessages": "{{- count}} unread messages",
+      "userNotLoggedIn": "Not logged in",
+      "addWorkspace": "Add workspace ({{shortcut}}+N)",
+      "settingsMenu": "Customize and control app"
+    }
+  },
+  "touchBar": {
+    "formatting": "Formatting",
+    "selectServer": "Select server"
+  },
+  "tray": {
+    "menu": {
+      "show": "Show",
+      "hide": "Hide",
+      "quit": "Quit"
+    },
+    "tooltip": {
+      "noUnreadMessage": "{{- appName}}: no unread message",
+      "unreadMention": "{{- appName}}: you have a unread mention/direct message",
+      "unreadMention_plural": "{{- appName}}: you have {{- count}} unread mentions/direct messages",
+      "unreadMessage": "{{- appName}}: you have unread messages"
+    },
+    "balloon": {
+      "stillRunning": {
+        "title": "{{- appName}} is still running",
+        "content": "{{- appName }} is set to stay running in the system tray/notification area."
+      }
+    }
+  },
+  "taskbar": {
+    "unreadMessage": "Unread messages",
+    "unreadMention": "Unread mentions",
+    "noUnreadMessage": "No unread messages"
+  },
+  "screenSharing": {
+    "permissionDenied": "Screen Recording Permission Denied",
+    "permissionRequired": "Screen recording permission is required to share your screen.",
+    "permissionInstructions": "Please enable it in your system preferences and try again.",
+    "openSystemPreferences": "Open System Preferences",
+    "title": "Share your screen",
+    "entireScreen": "Your entire screen",
+    "applicationWindow": "Application window",
+    "noScreensFound": "No screens found",
+    "noWindowsFound": "No windows found",
+    "cancel": "Cancel",
+    "share": "Share"
+  },
+  "logging": {
+    "context": {
+      "processTypes": {
+        "main": "Main Process",
+        "renderer": "Renderer Process",
+        "preload": "Preload Process",
+        "rendererRoot": "Main Window",
+        "webview": "Server Webview",
+        "videoCall": "Video Call Window"
+      },
+      "components": {
+        "auth": "Authentication",
+        "connection": "Connection",
+        "notification": "Notification",
+        "outlook": "Outlook Calendar",
+        "videoCall": "Video Call",
+        "download": "Download",
+        "spellCheck": "Spell Check",
+        "general": "General"
+      },
+      "serverInfo": {
+        "anonymous": "Anonymous Server",
+        "local": "Local Process",
+        "unknown": "Unknown Server"
+      }
+    },
+    "status": {
+      "moduleNotAvailable": "Store module not available for server context mapping",
+      "importFailed": "Store import failed"
+    },
+    "errors": {
+      "configurationFailed": "Failed to configure electron-log",
+      "storeUnavailable": "Store module not available for server context mapping",
+      "webContentsLoggingFailed": "Failed to setup webContents logging",
+      "rendererLogFailed": "Failed to log from renderer",
+      "consoleOverrideFailed": "Failed to override console methods"
+    },
+    "messages": {
+      "serverContext": "Server {{- serverNumber}}",
+      "logContext": "Log Context: {{- context}}"
+    }
+  },
+  "logViewer": {
+    "title": "Log Viewer",
+    "aria": {
+      "logIcon": "Log viewer icon",
+      "entriesCount": "{{count}} log entries displayed"
+    },
+    "fileInfo": {
+      "custom": "Custom",
+      "entries": "{{count}} entries",
+      "entriesOfTotal": "{{count}} of {{total}} entries",
+      "noEntries": "No entries"
+    },
+    "buttons": {
+      "openLogFile": "Open Log File",
+      "defaultLog": "Default Log",
+      "refresh": "Refresh",
+      "autoRefresh": "Auto Refresh",
+      "stopAutoRefresh": "Stop Auto Refresh",
+      "copy": "Copy",
+      "save": "Save",
+      "clear": "Clear",
+      "close": "Close",
+      "clearFilters": "Clear Filters"
+    },
+    "controls": {
+      "showContext": "Show Context",
+      "showServer": "Show Server",
+      "autoScrollToTop": "Auto Scroll to Top"
+    },
+    "placeholders": {
+      "loadAmount": "Load amount",
+      "searchLogs": "Search logs...",
+      "level": "Level",
+      "context": "Context",
+      "exchangeDebug": "Exchange Debug Filter"
+    },
+    "filters": {
+      "entryLimit": {
+        "last100": "Last 100 entries",
+        "last500": "Last 500 entries",
+        "last1000": "Last 1000 entries",
+        "last5000": "Last 5000 entries",
+        "all": "All entries"
+      },
+      "level": {
+        "all": "All Levels",
+        "debug": "Debug",
+        "info": "Info",
+        "warn": "Warning",
+        "error": "Error",
+        "verbose": "Verbose"
+      },
+      "context": {
+        "all": "All Contexts",
+        "main": "Main Process",
+        "renderer": "Renderer",
+        "webview": "Webview",
+        "videocall": "Video Call",
+        "outlook": "Outlook Calendar",
+        "auth": "Authentication",
+        "updates": "Updates",
+        "notifications": "Notifications",
+        "servers": "Servers",
+        "ipc": "IPC Communication"
+      },
+      "server": {
+        "all": "All Servers",
+        "label": "Server"
+      },
+      "exchangeDebug": {
+        "all": "All Logs",
+        "success": "Success Only",
+        "failure": "Failures Only",
+        "ntlmFlow": "NTLM Authentication",
+        "exchangeComm": "Exchange Communication",
+        "sslCerts": "SSL/Certificate Issues",
+        "networkErrors": "Network Issues",
+        "successFactors": "Success Factors",
+        "outlookCalendar": "Outlook Calendar"
+      }
+    },
+    "messages": {
+      "noLogsFound": "No logs found",
+      "adjustFilters": "Try adjusting your filters or refresh the logs"
+    }
+  },
+  "serverInfo": {
+    "title": "Server Information",
+    "urlLabel": "URL:",
+    "versionLabel": "Version:",
+    "unknown": "Unknown",
+    "exchangeUrlLabel": "Outlook Exchange URL:",
+    "supportedVersionsTitle": "Supported Versions",
+    "statusLabel": "Status:",
+    "status": {
+      "loading": "Loading...",
+      "error": "Failed to load",
+      "loaded": "Loaded",
+      "idle": "Idle",
+      "from": "from {{source}}"
+    },
+    "supported": {
+      "unknown": "Unknown",
+      "expiring": "Expiring",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "expiration": {
+      "label": "Expiration:",
+      "expiresOn": "Expires on {{date}}"
+    }
+  },
+  "telephony": {
+    "defaultHandlerPrompt": {
+      "title": "Rocket.Chat now opens phone links",
+      "body": "tel: and callto: links from your browser or other apps can now open Rocket.Chat.",
+      "bodyWindows": "Windows still needs your confirmation. On the Default Apps page, tap each link type (tel and callto) and pick Rocket.Chat. You do this once per link type, and Windows prevents apps from setting it for you.",
+      "bodyLinux": "Other apps may still claim phone links on your system. Open default applications and set Rocket.Chat for tel: and callto: to finish.",
+      "openSettingsWindows": "Open Rocket.Chat default apps",
+      "openSettingsLinux": "Open default applications",
+      "dismiss": "Got it"
+    },
+    "diagnostics": {
+      "title": "Phone-link handler diagnostics",
+      "subtitle": "Check whether your system routes tel: and callto: links to Rocket.Chat.",
+      "refresh": "Refresh",
+      "copy": "Copy diagnostics",
+      "copied": "Copied",
+      "openSettingsAction": "Open settings",
+      "platform": "Platform",
+      "lastChecked": "Last checked",
+      "summary": {
+        "checking": "Checking…",
+        "issues_one": "{{count}} issue",
+        "issues_other": "{{count}} issues",
+        "warnings_one": "{{count}} warning",
+        "warnings_other": "{{count}} warnings",
+        "healthy": "All checks pass"
+      },
+      "status": {
+        "pass": "Pass",
+        "fail": "Fail",
+        "unknown": "Unknown"
+      },
+      "checks": {
+        "isDefault.tel": "System default for click-to-call (tel:): Rocket.Chat",
+        "isDefault.callto": "System default for click-to-conference (callto:): Rocket.Chat",
+        "windows.registeredApp": "Rocket.Chat listed in Windows Registered Applications",
+        "windows.capabilities.tel": "Windows Capabilities map click-to-call (tel:) to Rocket.Chat",
+        "windows.capabilities.callto": "Windows Capabilities map click-to-conference (callto:) to Rocket.Chat",
+        "windows.progid.tel": "Windows ProgID for click-to-call (tel:) launches Rocket.Chat",
+        "windows.progid.callto": "Windows ProgID for click-to-conference (callto:) launches Rocket.Chat",
+        "darwin.handler.tel": "macOS confirms Rocket.Chat handles click-to-call (tel:)",
+        "darwin.handler.callto": "macOS confirms Rocket.Chat handles click-to-conference (callto:)",
+        "linux.xdg.tel": "Linux xdg-mime points click-to-call (tel:) at Rocket.Chat",
+        "linux.xdg.callto": "Linux xdg-mime points click-to-conference (callto:) at Rocket.Chat"
+      }
+    }
+  }
+}

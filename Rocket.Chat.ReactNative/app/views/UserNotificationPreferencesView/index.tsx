@@ -1,0 +1,154 @@
+import { useEffect, useLayoutEffect, useState } from 'react';
+import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { type CompositeNavigationProp, useNavigation } from '@react-navigation/native';
+
+import * as List from '../../containers/List';
+import I18n from '../../i18n';
+import SafeAreaView from '../../containers/SafeAreaView';
+import ActivityIndicator from '../../containers/ActivityIndicator';
+import { getUserSelector } from '../../selectors/login';
+import { type ProfileStackParamList } from '../../stacks/types';
+import { type INotificationPreferences } from '../../definitions';
+import { useAppSelector } from '../../lib/hooks/useAppSelector';
+import { useMasterDetail } from '../../lib/hooks/useMasterDetail';
+import ListPicker from './ListPicker';
+import log from '../../lib/methods/helpers/log';
+import { type MasterDetailInsideStackParamList } from '../../stacks/MasterDetailStack/types';
+import { useUserPreferences } from '../../lib/methods/userPreferences';
+import { getUserPreferences, setUserPreferences } from '../../lib/services/restApi';
+import { NOTIFICATION_IN_APP_VIBRATION } from '../../lib/constants/notifications';
+import Switch from '../../containers/Switch';
+
+type TNavigation = CompositeNavigationProp<
+	NativeStackNavigationProp<ProfileStackParamList, 'UserNotificationPrefView'>,
+	NativeStackNavigationProp<MasterDetailInsideStackParamList>
+>;
+
+const UserNotificationPreferencesView = () => {
+	const [inAppVibration, setInAppVibration] = useUserPreferences<boolean>(NOTIFICATION_IN_APP_VIBRATION, true);
+	const [preferences, setPreferences] = useState({} as INotificationPreferences);
+	const [loading, setLoading] = useState(true);
+
+	const navigation = useNavigation<TNavigation>();
+	const userId = useAppSelector(state => getUserSelector(state).id);
+	const isMasterDetail = useMasterDetail();
+
+	useLayoutEffect(() => {
+		navigation.setOptions({
+			title: I18n.t('Notification_Preferences')
+		});
+	}, [navigation]);
+
+	useEffect(() => {
+		async function getPreferences() {
+			try {
+				const result = await getUserPreferences(userId);
+				if (result.success) {
+					setLoading(false);
+					setPreferences(result.preferences);
+				}
+			} catch (error) {
+				setLoading(false);
+				log(error);
+			}
+		}
+		getPreferences();
+	}, [userId]);
+
+	const onValueChangePicker = async (param: { [key: string]: string }) => {
+		const previousPreferences = preferences;
+		try {
+			setPreferences({ ...previousPreferences, ...param });
+			const result = await setUserPreferences(userId, param);
+			if (!result.success) {
+				setPreferences(previousPreferences);
+			}
+		} catch (error) {
+			setPreferences(previousPreferences);
+			log(error);
+		}
+	};
+
+	const navigateToPushTroubleshootView = () => {
+		if (isMasterDetail) {
+			navigation.navigate('ModalStackNavigator', { screen: 'PushTroubleshootView' });
+		} else {
+			navigation.navigate('PushTroubleshootView');
+		}
+	};
+
+	const toggleInAppVibration = () => {
+		setInAppVibration(!inAppVibration);
+	};
+
+	return (
+		<SafeAreaView testID='user-notification-preference-view'>
+			<List.Container>
+				{loading ? (
+					<ActivityIndicator />
+				) : (
+					<>
+						<List.Section title='In_App_Notification'>
+							<List.Separator />
+							<ListPicker
+								onChangeValue={onValueChangePicker}
+								preference={'desktopNotifications'}
+								title='Alert'
+								testID='user-notification-preference-view-alert'
+								value={preferences.desktopNotifications}
+							/>
+							<List.Separator />
+							<List.Item
+								title='Notifications_vibrate_from_new_messages'
+								right={() => (
+									<Switch
+										value={inAppVibration}
+										onValueChange={toggleInAppVibration}
+										testID='user-notification-preference-view-in-app-vibration'
+									/>
+								)}
+							/>
+							<List.Separator />
+							<List.Info info='In_App_Alert_info' />
+						</List.Section>
+
+						<List.Section title='Push_Notifications'>
+							<List.Separator />
+							<ListPicker
+								onChangeValue={onValueChangePicker}
+								preference={'pushNotifications'}
+								title='Alert'
+								testID='user-notification-preference-view-push-notification'
+								value={preferences.pushNotifications}
+							/>
+							<List.Separator />
+							<List.Item
+								title='Troubleshooting'
+								onPress={navigateToPushTroubleshootView}
+								testID='user-notification-preference-view-troubleshooting'
+								showActionIndicator
+							/>
+							<List.Separator />
+							<List.Info info='Push_Notifications_Alert_Info' />
+						</List.Section>
+
+						<List.Section title='Email'>
+							<List.Separator />
+							<ListPicker
+								onChangeValue={onValueChangePicker}
+								preference={'emailNotificationMode'}
+								title='Alert'
+								testID='user-notification-preference-view-email-alert'
+								value={preferences.emailNotificationMode}
+							/>
+							<List.Separator />
+							<List.Info info='You_need_to_verifiy_your_email_address_to_get_notications' />
+						</List.Section>
+					</>
+				)}
+			</List.Container>
+		</SafeAreaView>
+	);
+};
+
+export default UserNotificationPreferencesView;

@@ -1,0 +1,87 @@
+# D-Origin branding overlay for official Rocket.Chat image (no custom rebuild required).
+# On EC2 (dorigin-rocketchat):
+#   docker compose -f docker-compose.yml -f compose.dorigin-branding.yml up -d
+
+services:
+  rocketchat:
+    environment:
+      OVERWRITE_SETTING_Site_Name: ${DORIGIN_SITE_NAME:-D-Origin}
+      OVERWRITE_SETTING_Organization_Name: ${DORIGIN_ORG_NAME:-D-Origin}
+      OVERWRITE_SETTING_Layout_Home_Title: ${DORIGIN_HOME_TITLE:-Home}
+      OVERWRITE_SETTING_Layout_Sidenav_Footer: ${DORIGIN_SIDENAV_FOOTER:-<a href="/home" style="color:inherit;text-decoration:none;line-height:1.25"><div style="font-weight:600;font-size:14px">D-Origin</div><div style="font-weight:400;font-size:11px;opacity:.75">powered by beathah</div></a>}
+      OVERWRITE_SETTING_Layout_Sidenav_Footer_Dark: ${DORIGIN_SIDENAV_FOOTER_DARK:-<a href="/home" style="color:#fff;text-decoration:none;line-height:1.25"><div style="font-weight:600;font-size:14px">D-Origin</div><div style="font-weight:400;font-size:11px;opacity:.75">powered by beathah</div></a>}
+      OVERWRITE_SETTING_theme-custom-css: |-
+        /* Sidebar Rocket.Chat watermark */
+        footer.rcx-sidebar-footer a[href*="rocket.chat"],
+        .rcx-sidebar-footer a[href*="rocket.chat"] { display: none !important; }
+        /* Login: hide default Rocket.Chat logo asset + powered-by link */
+        img[src*="/images/logo/logo"],
+        img[alt="Logo"][src*="logo.svg"],
+        a[href*="rocket.chat"] { display: none !important; }
+      OVERWRITE_SETTING_Custom_Script_Logged_Out: |
+        (function () {
+          if (window.__doriginLoginBranding) return;
+          window.__doriginLoginBranding = true;
+          function brandLogin() {
+            try {
+              document.querySelectorAll('img[src*="/images/logo/logo"], img[alt="Logo"][src*="logo"]').forEach(function (img) {
+                if (img.dataset.doriginReplaced) return;
+                img.dataset.doriginReplaced = "1";
+                img.style.display = "none";
+                var label = document.createElement("div");
+                label.textContent = "D-Origin";
+                label.style.cssText = "font-weight:700;font-size:22px;line-height:1.2;color:inherit";
+                if (img.parentNode) img.parentNode.insertBefore(label, img);
+              });
+              document.querySelectorAll('a[href*="rocket.chat"]').forEach(function (a) {
+                var box = a.parentElement;
+                if (box && !box.dataset.doriginPowered) {
+                  box.dataset.doriginPowered = "1";
+                  box.textContent = "D-Origin powered by beathah";
+                } else {
+                  a.style.display = "none";
+                }
+              });
+              var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+              var node;
+              while ((node = walker.nextNode())) {
+                var v = node.nodeValue;
+                if (!v) continue;
+                if (v.indexOf("Powered by") !== -1) {
+                  node.nodeValue = "D-Origin powered by beathah";
+                }
+              }
+            } catch (e) {}
+          }
+          brandLogin();
+          new MutationObserver(brandLogin).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+        })();
+      OVERWRITE_SETTING_Custom_Script_Logged_In: |
+        (function () {
+          if (window.__doriginBrandingApplied) return;
+          window.__doriginBrandingApplied = true;
+          var replacements = {
+            "Powered by Rocket.Chat": "D-Origin powered by beathah",
+            "Take Rocket.Chat with you with mobile applications.": "Take D-Origin with you with mobile applications.",
+            "Install Rocket.Chat on your preferred desktop platform.": "Install D-Origin on your preferred desktop platform.",
+            "Learn how to unlock the myriad possibilities of Rocket.Chat.": "Learn how to unlock the myriad possibilities of D-Origin."
+          };
+          function replaceTextNodes(root) {
+            var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+            var node;
+            while ((node = walker.nextNode())) {
+              var value = node.nodeValue;
+              if (!value || !value.trim()) continue;
+              var next = value;
+              Object.keys(replacements).forEach(function (from) {
+                if (next.indexOf(from) !== -1) next = next.split(from).join(replacements[from]);
+              });
+              if (next !== value) node.nodeValue = next;
+            }
+          }
+          function apply() {
+            try { replaceTextNodes(document.body); } catch (e) {}
+          }
+          apply();
+          new MutationObserver(function () { apply(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+        })();

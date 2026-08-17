@@ -1,0 +1,176 @@
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback, useEffect, useLayoutEffect, useRef, type ReactElement } from 'react';
+import { ScrollView, StyleSheet, Text, AccessibilityInfo, View } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { useForm } from 'react-hook-form';
+import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+import { type E2EEnterYourPasswordStackParamList, type InsideStackParamList } from '../stacks/types';
+import { encryptionDecodeKey } from '../actions/encryption';
+import Button from '../containers/Button';
+import * as HeaderButton from '../containers/Header/components/HeaderButton';
+import KeyboardView from '../containers/KeyboardView';
+import SafeAreaView from '../containers/SafeAreaView';
+import { ControlledFormTextInput } from '../containers/TextInput';
+import I18n from '../i18n';
+import { useAppSelector } from '../lib/hooks/useAppSelector';
+import { events, logEvent } from '../lib/methods/helpers/log';
+import scrollPersistTaps from '../lib/methods/helpers/scrollPersistTaps';
+import { useTheme } from '../theme';
+import sharedStyles from './Styles';
+import { showToast } from '../lib/methods/helpers/showToast';
+import { showErrorAlert, useDebounce } from '../lib/methods/helpers';
+import { Separator } from '../containers/List';
+
+const styles = StyleSheet.create({
+	info: {
+		fontSize: 16,
+		lineHeight: 24,
+		marginTop: 24,
+		...sharedStyles.textRegular
+	},
+	content: {
+		gap: 32
+	},
+	e2eePasswordInput: {
+		marginBottom: 0
+	},
+	forgotE2EEPasswordButton: {
+		marginTop: 0
+	}
+});
+
+interface IE2EEnterYourPasswordView {
+	navigation: NativeStackNavigationProp<E2EEnterYourPasswordStackParamList, 'E2EEnterYourPasswordView'>;
+}
+
+const E2EEnterYourPasswordView = ({ navigation }: IE2EEnterYourPasswordView): ReactElement => {
+	const { colors } = useTheme();
+	const dispatch = useDispatch();
+	const { enabled: encryptionEnabled, failure: encryptionFailure } = useAppSelector(state => state.encryption);
+	const prevEncryptionFailure = useRef<boolean>(encryptionFailure);
+	const {
+		control,
+		setError,
+		watch,
+		handleSubmit,
+		formState: { errors }
+	} = useForm({
+		mode: 'onChange',
+		defaultValues: { password: '' }
+	});
+	const shouldDisplayToast = useRef<boolean>(false);
+
+	const password = watch('password');
+
+	/**
+	 * If e2ee is enabled, close screen and display success toast.
+	 * Note: Debounce prevents `isFocused` from running another re-render and triggering another toast
+	 */
+	const displayEncryptionEnabled = useDebounce(
+		() => {
+			navigation.goBack();
+			showToast(I18n.t('e2ee_enabled'));
+		},
+		1000,
+		{ leading: true }
+	);
+
+	if (encryptionEnabled) {
+		displayEncryptionEnabled();
+	}
+
+	// If screen is closed and e2ee is still disabled, warns the user via toast
+	useFocusEffect(
+		useCallback(() => {
+			shouldDisplayToast.current = true;
+			return () => {
+				if (!encryptionEnabled && shouldDisplayToast.current) {
+					showToast(I18n.t('e2ee_disabled'));
+				}
+			};
+		}, [encryptionEnabled])
+	);
+
+	useLayoutEffect(() => {
+		navigation.setOptions({
+			headerLeft: () => <HeaderButton.CloseModal testID='e2e-enter-your-password-view-close' />,
+			title: I18n.t('Enter_E2EE_Password')
+		});
+	}, [navigation]);
+
+	useEffect(() => {
+		if (encryptionFailure !== prevEncryptionFailure.current && encryptionFailure && password) {
+			setError('password', { message: I18n.t('Error_incorrect_password'), type: 'validate' });
+			showErrorAlert(I18n.t('Encryption_error_desc'), I18n.t('Encryption_error_title'));
+			AccessibilityInfo.announceForAccessibility(I18n.t('Invalid_URL'));
+			prevEncryptionFailure.current = encryptionFailure;
+		}
+	}, [encryptionFailure, prevEncryptionFailure]);
+
+	const submit = () => {
+		shouldDisplayToast.current = false;
+		prevEncryptionFailure.current = false;
+		logEvent(events.E2E_ENTER_PW_SUBMIT);
+		dispatch(encryptionDecodeKey(password));
+	};
+
+	const navigateToForgotPassword = () => {
+		shouldDisplayToast.current = false;
+		const insideNavigation = navigation.getParent<NativeStackNavigationProp<InsideStackParamList>>();
+		insideNavigation?.navigate('E2EEnterYourPasswordStackNavigator', { screen: 'E2EEncryptionSecurityView' });
+	};
+
+	return (
+		<KeyboardView>
+			<ScrollView
+				{...scrollPersistTaps}
+				style={sharedStyles.container}
+				contentContainerStyle={{ ...sharedStyles.containerScrollView }}>
+				<SafeAreaView style={{ ...styles.content, backgroundColor: colors.surfaceRoom }} testID='e2e-enter-your-password-view'>
+					<Text style={[styles.info, { color: colors.fontDefault }]}>{I18n.t('Enter_E2EE_Password_description')}</Text>
+
+					<ControlledFormTextInput
+						name='password'
+						control={control}
+						label={I18n.t('E2EE_password')}
+						error={errors.password?.message}
+						returnKeyType='send'
+						secureTextEntry
+						onSubmitEditing={submit}
+						testID='e2e-enter-your-password-view-password'
+						autoComplete='password'
+						textContentType='password'
+						importantForAutofill='yes'
+						containerStyle={styles.e2eePasswordInput}
+					/>
+					<View>
+						<Button
+							onPress={handleSubmit(submit)}
+							title={I18n.t('Enable_encryption_button_label')}
+							testID='e2e-enter-your-password-view-confirm'
+						/>
+						<Button
+							type='secondary'
+							onPress={navigateToForgotPassword}
+							title={I18n.t('Forgot_E2EE_password')}
+							testID='e2e-enter-your-password-view-forgot-password'
+							style={styles.forgotE2EEPasswordButton}
+						/>
+					</View>
+
+					<Separator />
+
+					<Button
+						type='secondary'
+						onPress={() => navigation.goBack()}
+						title={I18n.t('Do_it_later')}
+						testID='e2e-enter-your-password-view-do-it-later'
+					/>
+				</SafeAreaView>
+			</ScrollView>
+		</KeyboardView>
+	);
+};
+
+export default E2EEnterYourPasswordView;
