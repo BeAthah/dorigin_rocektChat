@@ -1,0 +1,162 @@
+# Root ignore for the combined D-Origin / Rocket.Chat workspace.
+# Nested project .gitignore files still apply; this is the safety net
+# so GitHub uploads stay small and do not include build or secret files.
+
+# --- Nested git history (do NOT upload other repos' .git folders) ---
+# Git will not track another repo's files unless those .git dirs are removed
+# before `git add`. See README note in chat. These patterns help zip/upload tools.
+**/.git/
+**/.git
+
+# --- Dependencies ---
+node_modules/
+jspm_packages/
+bower_components/
+vendor/bundle/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnpm-store/
+.npm/
+.nvmrc
+
+# --- Build / compile output ---
+dist/
+build/
+out/
+.next/
+.turbo/
+.cache/
+.parcel-cache/
+.metro-health-check*
+*.tsbuildinfo
+storybook-static/
+
+# --- Meteor ---
+**/.meteor/local/
+**/.meteor/local*
+**/.meteor/dev_bundle/
+**/.meteor/meteorite/
+
+# --- React Native / Android / iOS ---
+*.apk
+*.aab
+*.ipa
+*.hmap
+*.hprof
+*.xcuserstate
+*.xccheckout
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+**/xcuserdata/
+**/DerivedData/
+**/Pods/
+**/.xcode.env.local
+project.xcworkspace
+*.mobileprovision
+.gradle/
+.cxx/
+.kotlin/
+local.properties
+*.iml
+
+# Keep the RN debug keystore if present; ignore all other keystores
+*.keystore
+*.jks
+!**/debug.keystore
+
+# --- Electron ---
+*.dmg
+*.exe
+*.AppImage
+*.blockmap
+*.dylib
+Development.provisionprofile
+
+# --- Docker / compose / local data ---
+docker-local/data/
+**/mongodb_vol/
+**/mongodb_data/
+**/tempo-data/
+rocketchat-compose/data/
+rocketchat-compose/gists/
+override-*
+override.*
+
+# --- Env and secrets ---
+.env
+.env.*
+!.env.example
+!.env*.example
+*.pem
+*.p8
+*.tokens
+registration.yaml
+
+# --- Tests / coverage ---
+coverage/
+.nyc_output/
+.jest-cache/
+**/fastlane/report.xml
+**/fastlane/Preview.html
+**/fastlane/screenshots
+**/fastlane/test_output
+playwright-report/
+test-results/
+**/tests/e2e/.playwright/
+**/tests/e2e/test-failures/
+
+# --- Logs and temp ---
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*.tmp
+*.temp
+*.bak
+*~
+*.swp
+*.swo
+
+# --- OS / editor ---
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+.history/
+.vim/
+.exrc
+
+# --- Local agent / tooling state ---
+.cursor/
+.claude/
+.agents/
+.omc/
+.superset/
+.brv/
+.knowledge/
+.wolf/
+.gitnexus
+.worktrees/
+coderabbit-update-*/
+localdev/

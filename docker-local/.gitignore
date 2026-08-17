@@ -1,0 +1,6 @@
+# Local runtime data if you switch from named volumes to bind mounts
+data/
+*.log
+.env
+.env.*
+!.env.example
