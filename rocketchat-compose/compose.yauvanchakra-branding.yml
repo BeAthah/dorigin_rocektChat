@@ -1,6 +1,6 @@
 # Yauvanchakra branding overlay for the official Rocket.Chat image.
-# Start it last so these settings override the base compose file:
-#   docker compose -f compose.monitoring.yml -f compose.traefik.yml -f compose.database.yml -f compose.yml -f compose.nats.yml -f docker.yml -f compose.yauvanchakra-branding.yml up -d
+# The first line of Custom_Script_Logged_Out closes the app's event wrapper so the
+# rename runs on the setup screen as well, including a fresh incognito visit.
 
 services:
   rocketchat:
@@ -8,21 +8,46 @@ services:
       OVERWRITE_SETTING_Site_Name: ${YAUVANCHAKRA_SITE_NAME:-Yauvanchakra}
       OVERWRITE_SETTING_Organization_Name: ${YAUVANCHAKRA_ORG_NAME:-Yauvanchakra}
       OVERWRITE_SETTING_Layout_Home_Title: ${YAUVANCHAKRA_HOME_TITLE:-Home}
-      OVERWRITE_SETTING_Layout_Sidenav_Footer: ${YAUVANCHAKRA_SIDENAV_FOOTER:-<a href="/home" style="color:inherit;text-decoration:none;line-height:1.25"><div style="font-weight:600;font-size:14px">Yauvanchakra</div><div style="font-weight:400;font-size:11px;opacity:.75">powered by beathah</div></a>}
-      OVERWRITE_SETTING_Layout_Sidenav_Footer_Dark: ${YAUVANCHAKRA_SIDENAV_FOOTER_DARK:-<a href="/home" style="color:#fff;text-decoration:none;line-height:1.25"><div style="font-weight:600;font-size:14px">Yauvanchakra</div><div style="font-weight:400;font-size:11px;opacity:.75">powered by beathah</div></a>}
+      OVERWRITE_SETTING_Layout_Sidenav_Footer: ${YAUVANCHAKRA_SIDENAV_FOOTER:-<a href="/home" style="color:inherit;text-decoration:none;line-height:1.25"><div style="font-weight:600;font-size:14px">Yauvanchakra</div></a>}
+      OVERWRITE_SETTING_Layout_Sidenav_Footer_Dark: ${YAUVANCHAKRA_SIDENAV_FOOTER_DARK:-<a href="/home" style="color:#fff;text-decoration:none;line-height:1.25"><div style="font-weight:600;font-size:14px">Yauvanchakra</div></a>}
       OVERWRITE_SETTING_theme-custom-css: |-
         footer.rcx-sidebar-footer a[href*="rocket.chat"],
         .rcx-sidebar-footer a[href*="rocket.chat"] { display: none !important; }
-        img[src*="/images/logo/logo"],
-        img[alt="Logo"][src*="logo.svg"],
-        a[href*="rocket.chat"] { display: none !important; }
+        img[src*="/images/logo/"],
+        img[alt="Logo"][src*="logo"] { display: none !important; }
+        svg[viewBox="0 0 180 30"] { display: none !important; }
+        div:has(> svg[viewBox="0 0 180 30"]) {
+          height: auto !important;
+          min-height: 0 !important;
+        }
+        div:has(> svg[viewBox="0 0 180 30"])::before {
+          content: "Yauvanchakra";
+          display: block;
+          font-size: 32px;
+          font-weight: 700;
+          line-height: 1.15;
+          color: #1f2329;
+        }
       OVERWRITE_SETTING_Custom_Script_Logged_Out: |
+        });
         (function () {
-          if (window.__yauvanchakraLoginBranding) return;
-          window.__yauvanchakraLoginBranding = true;
-          function brandLogin() {
+          if (window.__yauvanchakraBoot) return;
+          window.__yauvanchakraBoot = true;
+          var icon = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#1f2329"/><text x="32" y="44" text-anchor="middle" font-family="Arial,sans-serif" font-size="36" font-weight="700" fill="#ffffff">Y</text></svg>');
+          function brand() {
             try {
-              document.querySelectorAll('img[src*="/images/logo/logo"], img[alt="Logo"][src*="logo"]').forEach(function (img) {
+              document.querySelectorAll('link[rel*="icon"], link[rel="apple-touch-icon"]').forEach(function (link) {
+                if (link.href !== icon) link.href = icon;
+              });
+              document.querySelectorAll('a[href*="rocket.chat"]').forEach(function (a) {
+                if (a.closest("footer, .rcx-sidebar-footer")) {
+                  a.style.display = "none";
+                  return;
+                }
+                a.setAttribute("href", "#");
+                a.removeAttribute("target");
+              });
+              document.querySelectorAll('img[src*="/images/logo/"], img[alt="Logo"]').forEach(function (img) {
                 if (img.dataset.yauvanchakraReplaced) return;
                 img.dataset.yauvanchakraReplaced = "1";
                 img.style.display = "none";
@@ -31,57 +56,37 @@ services:
                 label.style.cssText = "font-weight:700;font-size:22px;line-height:1.2;color:inherit";
                 if (img.parentNode) img.parentNode.insertBefore(label, img);
               });
-              document.querySelectorAll('a[href*="rocket.chat"]').forEach(function (a) {
-                var box = a.parentElement;
-                if (box && !box.dataset.yauvanchakraPowered) {
-                  box.dataset.yauvanchakraPowered = "1";
-                  box.textContent = "Yauvanchakra";
-                } else {
-                  a.style.display = "none";
-                }
-              });
+              if (!document.body) return;
               var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
               var node;
               while ((node = walker.nextNode())) {
-                var v = node.nodeValue;
-                if (!v) continue;
-                if (v.indexOf("Powered by") !== -1 || v.indexOf("Rocket.Chat") !== -1 || v.indexOf("D-Origin") !== -1) {
-                  node.nodeValue = "Yauvanchakra";
-                }
+                var value = node.nodeValue;
+                if (!value || !/rocket\.chat|d-origin/i.test(value)) continue;
+                var next = value.replace(/rocket\.chat/ig, "Yauvanchakra").replace(/d-origin/ig, "Yauvanchakra");
+                if (next !== value) node.nodeValue = next;
               }
             } catch (e) {}
           }
-          brandLogin();
-          new MutationObserver(brandLogin).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+          brand();
+          new MutationObserver(function () { brand(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
         })();
+        window.addEventListener("yauvanchakra-noop", function () {
       OVERWRITE_SETTING_Custom_Script_Logged_In: |
         (function () {
           if (window.__yauvanchakraBrandingApplied) return;
           window.__yauvanchakraBrandingApplied = true;
-          var replacements = {
-            "Powered by Rocket.Chat": "Yauvanchakra",
-            "D-Origin powered by beathah": "Yauvanchakra",
-            "D-Origin": "Yauvanchakra",
-            "Take Rocket.Chat with you with mobile applications.": "Take Yauvanchakra with you with mobile applications.",
-            "Install Rocket.Chat on your preferred desktop platform.": "Install Yauvanchakra on your preferred desktop platform.",
-            "Learn how to unlock the myriad possibilities of Rocket.Chat.": "Learn how to unlock the myriad possibilities of Yauvanchakra.",
-            "Rocket.Chat": "Yauvanchakra"
-          };
-          function replaceTextNodes(root) {
-            var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
-            var node;
-            while ((node = walker.nextNode())) {
-              var value = node.nodeValue;
-              if (!value || !value.trim()) continue;
-              var next = value;
-              Object.keys(replacements).forEach(function (from) {
-                if (next.indexOf(from) !== -1) next = next.split(from).join(replacements[from]);
-              });
-              if (next !== value) node.nodeValue = next;
-            }
-          }
           function apply() {
-            try { replaceTextNodes(document.body); } catch (e) {}
+            try {
+              if (!document.body) return;
+              var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+              var node;
+              while ((node = walker.nextNode())) {
+                var value = node.nodeValue;
+                if (!value || !/rocket\.chat|d-origin/i.test(value)) continue;
+                var next = value.replace(/rocket\.chat/ig, "Yauvanchakra").replace(/d-origin/ig, "Yauvanchakra");
+                if (next !== value) node.nodeValue = next;
+              }
+            } catch (e) {}
           }
           apply();
           new MutationObserver(function () { apply(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
