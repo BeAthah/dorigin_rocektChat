@@ -6,7 +6,6 @@ services:
   rocketchat:
     environment:
       OVERWRITE_SETTING_Site_Name: ${YAUVANCHAKRA_SITE_NAME:-Yauvanchakra}
-      OVERWRITE_SETTING_Organization_Name: ${YAUVANCHAKRA_ORG_NAME:-Yauvanchakra}
       OVERWRITE_SETTING_Layout_Home_Title: ${YAUVANCHAKRA_HOME_TITLE:-Home}
       OVERWRITE_SETTING_Layout_Sidenav_Footer: ${YAUVANCHAKRA_SIDENAV_FOOTER:-<a href="/home" style="color:inherit;text-decoration:none;line-height:1.25"><div style="font-weight:600;font-size:14px">Yauvanchakra</div></a>}
       OVERWRITE_SETTING_Layout_Sidenav_Footer_Dark: ${YAUVANCHAKRA_SIDENAV_FOOTER_DARK:-<a href="/home" style="color:#fff;text-decoration:none;line-height:1.25"><div style="font-weight:600;font-size:14px">Yauvanchakra</div></a>}
