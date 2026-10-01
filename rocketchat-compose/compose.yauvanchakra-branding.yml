@@ -62,7 +62,7 @@ services:
               while ((node = walker.nextNode())) {
                 var value = node.nodeValue;
                 if (!value || !/rocket\.chat|d-origin/i.test(value)) continue;
-                var next = value.replace(/rocket\.chat/ig, "Yauvanchakra").replace(/d-origin/ig, "Yauvanchakra");
+                var next = value.replace(/(^|[^.\w])rocket\.chat/ig, function (_, prefix) { return prefix + "Yauvanchakra"; }).replace(/d-origin/ig, "Yauvanchakra");
                 if (next !== value) node.nodeValue = next;
               }
             } catch (e) {}
@@ -83,7 +83,7 @@ services:
               while ((node = walker.nextNode())) {
                 var value = node.nodeValue;
                 if (!value || !/rocket\.chat|d-origin/i.test(value)) continue;
-                var next = value.replace(/rocket\.chat/ig, "Yauvanchakra").replace(/d-origin/ig, "Yauvanchakra");
+                var next = value.replace(/(^|[^.\w])rocket\.chat/ig, function (_, prefix) { return prefix + "Yauvanchakra"; }).replace(/d-origin/ig, "Yauvanchakra");
                 if (next !== value) node.nodeValue = next;
               }
             } catch (e) {}
